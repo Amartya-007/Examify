@@ -144,7 +144,7 @@ const Agent = ({
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
   };
-
+  
   return (
     <>
       <div className="call-view">
@@ -152,8 +152,8 @@ const Agent = ({
         <div className="card-interviewer">
           <div className="avatar">
             <Image
-              src="/Ai_Speaker.png"
-              alt="ai-image"
+              src="/Ai_Speaker.svg"
+              alt="profile-image"
               width={65}
               height={54}
               className="object-cover"
@@ -167,7 +167,7 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/user-profile.svg"
+              src="/profile.svg"
               alt="profile-image"
               width={539}
               height={539}
