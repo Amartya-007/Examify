@@ -152,7 +152,7 @@ const Agent = ({
         <div className="card-interviewer">
           <div className="avatar">
             <Image
-              src="/Ai_Speaker.svg"
+              src="/Ai_Speaker.png"
               alt="ai-image"
               width={65}
               height={54}
@@ -167,7 +167,7 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/profile.svg"
+              src="/user-profile.svg"
               alt="profile-image"
               width={539}
               height={539}
