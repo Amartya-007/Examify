@@ -153,7 +153,7 @@ const Agent = ({
           <div className="avatar">
             <Image
               src="/Ai_Speaker.svg"
-              alt="profile-image"
+              alt="ai-image"
               width={65}
               height={54}
               className="object-cover"
