@@ -4,6 +4,57 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+@font-face {
+  font-family: 'Bukhari Script';
+  src: url('../public/fonts/Bukhari_Script.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.custom-font {
+  font-family: 'Bukhari Script', sans-serif;
+}
+
+@layer utilities {
+  .glow-gradient {
+    background: linear-gradient(
+      270deg,
+      #00f6ff,
+      #8a2be2,
+      #ff0080,
+      #00f6ff
+    );
+    background-size: 400% 400%;
+    animation: colorFlow 8s ease infinite;
+  }
+
+  .glow-text {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-stroke path {
+    stroke: url(#glowGradient);
+  }
+
+  @keyframes colorFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+
 @theme {
   --color-success-100: #49de50;
   --color-success-200: #42c748;
