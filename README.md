@@ -89,6 +89,7 @@ App will be running at: [http://localhost:3000](http://localhost:3000)
 - [ ] Export to PDF & share links
 - ✅ Admin panel to moderate content
 - ✅ User feedback system for improving question quality
+- [ ] Dark mode toggle
 
 ## 🙌 Credits
 
