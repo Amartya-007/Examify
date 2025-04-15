@@ -8,6 +8,10 @@ import { auth } from "@/firebase/client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Grand_Hotel } from "next/font/google";
+
+const grandHotel = Grand_Hotel({ subsets: ["latin"], weight: "400" });
+
 
 import {
   createUserWithEmailAndPassword,
@@ -99,13 +103,29 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   return (
     <div className="card-border lg:min-w-[566px]">
-      <div className="flex flex-col gap-6 card py-14 px-10">
-        <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="logo" height={32} width={38} />
-          <h2 className="text-primary-100">PrepWise</h2>
-        </div>
+        <div className="flex flex-col items-center gap-6 card py-14 px-10 text-center">
+        <div className="flex flex-row gap-2 justify-center items-center ">
+  <Image
+    src="/brain_logo_main.png"
+    alt="Brain_logo"
+    height={50}
+    width={45}
+    
+  />
 
-        <h3>Practice job interviews with AI</h3>
+  <div className="overflow-visible  ">
+  <h2
+  className={`text-4xl leading-loose text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 ${grandHotel.className}`}
+>
+  <span className="inline-block align-bottom">Examify</span>
+</h2>
+
+
+  </div>
+</div>
+
+
+  <h3 className="font-extralight text-2xl">Practice Smarter. Perform Better</h3>
 
         <Form {...form}>
           <form
