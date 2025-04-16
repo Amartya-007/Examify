@@ -1,97 +1,125 @@
-# 🎙️ ExamiFy – AI-Powered Interview Generator
+# 🎙️ ExamiFy – AI-Powered Interview Assistant
 
-**ExamiFy** is a Next.js 14 web app that generates tailored interview questions using **Google Generative AI**, stores them in **Firebase**, and integrates with **Vapi** for voice interaction. Ideal for developers prepping for interviews or practicing with AI-based question delivery.
+**ExamiFy** is a cutting-edge, AI-driven web application built with Next.js 14 that helps users prepare for technical and behavioral interviews. Leveraging **Google's Gemini AI**, **Firebase**, and **Vapi** voice technology, ExamiFy delivers a highly personalized, interactive mock interview experience—directly in the browser.
 
 ---
 
 ## 🚀 Features
 
-- 🔐 **User Authentication** (Firebase Auth)
-- 🤖 **AI-Generated Interview Questions** (Gemini API via Google Generative AI)
-- 🧠 **Behavioral, Technical & Mixed Question Sets**
-- 🎤 **Voice Assistant Integration** with Vapi
-- ☁️ **Firestore Database** for storing user data & generated interviews
-- 🌐 **Next.js App Router + Server Actions**
+- 🔐 **Secure Authentication** – Seamless login/signup using Firebase Auth.
+- 🤖 **AI-Generated Interview Questions** – Powered by Google's Gemini models via `@ai-sdk/google`.
+- 🧠 **Dynamic Question Sets** – Generate technical, behavioral, or mixed question sets tailored to your needs.
+- 🎤 **Voice-Based Interaction** – Real-time voice assistant built with Vapi.
+- ☁️ **Persistent Storage** – Store question history, user data, and feedback via Firestore.
+- 📊 **Admin Panel** – Moderate content and manage interview data.
+- 💬 **User Feedback System** – Improve question quality with active feedback collection.
+- 📈 **Roadmap Ready** – Export to PDF and dark mode toggle coming soon.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14
-- **Backend**: Firebase (Auth + Firestore)
-- **AI Integration**: `@ai-sdk/google` (Gemini models)
-- **Voice AI**: Vapi
-- **Styling**: Tailwind CSS
+| Layer          | Tech                                |
+|----------------|-------------------------------------|
+| **Frontend**   | Next.js 14, Tailwind CSS            |
+| **AI Engine**  | Google Gemini API (`@ai-sdk/google`)|
+| **Backend**    | Firebase Auth + Firestore           |
+| **Voice AI**   | Vapi                                 |
+| **Deployment** | Vercel (recommended)                |
 
 ---
 
-## 📦 Installation
+## 📦 Getting Started
+
+### 1. Clone the Repository
 
 ```bash
-# Clone the project
-git clone https://github.com/your-username/examify.git
-cd examify
-
-# Install dependencies
-npm install
-
-# Create .env.local and add your credentials
-cp .env.example .env.local
+git clone https://github.com/Amartya-007/ExamiFy.git
+cd ExamiFy
 ```
 
----
+### 2. Install Dependencies
 
-## 🔐 Environment Variables
+```bash
+npm install
+```
 
-Make sure to add these to your `.env.local` file:
+### 3. Set Up Environment Variables
+
+Create a `.env.local` file in the root and populate it with:
 
 ```env
-# .env.local
-
 # Google Generative AI API Key
 GOOGLE_GENERATIVE_AI_API_KEY=your_google_api_key
 
-# VAPI Token (for VAPI Web integration)
+# Vapi Web Token
 NEXT_PUBLIC_VAPI_WEB_TOKEN=your_vapi_token
 
-# Firebase Configuration
+# Firebase Config
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
-# Firebase Service Account (for backend usage, not on the frontend)
-FIREBASE_CLIENT_EMAIL=your_firebase_client_email
-FIREBASE_PRIVATE_KEY=your_firebase_private_key
-
+# Firebase Admin Credentials (Backend Only)
+FIREBASE_CLIENT_EMAIL=your_client_email
+FIREBASE_PRIVATE_KEY=your_private_key
 ```
 
----
-
-## 🧑‍💻 Development
+### 4. Run the Development Server
 
 ```bash
-# Run the development server
 npm run dev
 ```
 
-App will be running at: [http://localhost:3000](http://localhost:3000)
+Visit [http://localhost:3000](http://localhost:3000) to explore the app.
 
 ---
 
-## ✅ TODO / Coming Soon
+## 📁 Project Structure Overview
 
-- ✅ User dashboard for reviewing previous interviews
-- ✅ Real-time voice interaction with Vapi
-- [ ] Export to PDF & share links
-- ✅ Admin panel to moderate content
-- ✅ User feedback system for improving question quality
+```
+app/               → App Router structure (auth, root, API routes)
+components/        → UI components and core logic
+firebase/          → Firebase client & admin setup
+lib/               → Server actions and utility functions
+public/            → Static assets (SVGs, images, icons)
+types/             → TypeScript type definitions
+```
+
+---
+
+## ✅ Roadmap
+
+- [x] AI-generated interview question sets
+- [x] Real-time voice assistant integration
+- [x] User dashboard for review
+- [x] Admin panel & moderation
+- [x] Feedback mechanism
+- [ ] Export interview session to PDF
 - [ ] Dark mode toggle
 
-## 🙌 Credits
+---
 
-Built with ❤️ by Amartya Vishwakarma  
-Powered by Google Gemini, Firebase & Vapi
+## 🤝 Contributing
+
+Contributions are welcome! If you'd like to suggest improvements, feel free to open an issue or submit a PR.
+
+---
+
+## 📄 License
+© 2025 [Amartya Vishwakarma](https://github.com/Amartya-007)
+
+---
+
+## 🙌 Acknowledgements
+
+- [Google AI SDK](https://www.npmjs.com/package/@ai-sdk/google)
+- [Vapi Voice Assistant](https://vapi.ai/)
+- [Firebase](https://firebase.google.com/)
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
