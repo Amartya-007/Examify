@@ -81,7 +81,7 @@ Visit [http://localhost:3000](http://localhost:3000) to explore the app.
 
 ## 📁 Project Structure Overview
 
-```
+``` plaintext
 app/               → App Router structure (auth, root, API routes)
 components/        → UI components and core logic
 firebase/          → Firebase client & admin setup
@@ -111,6 +111,7 @@ Contributions are welcome! If you'd like to suggest improvements, feel free to o
 ---
 
 ## 📄 License
+
 © 2025 [Amartya Vishwakarma](https://github.com/Amartya-007)
 
 ---
@@ -122,4 +123,3 @@ Contributions are welcome! If you'd like to suggest improvements, feel free to o
 - [Firebase](https://firebase.google.com/)
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-
