@@ -11,6 +11,7 @@ interface Feedback {
   areasForImprovement: string[];
   finalAssessment: string;
   createdAt: string;
+  transcript?: { role: string; content: string }[];
 }
 
 interface Interview {
@@ -36,6 +37,11 @@ interface User {
   name: string;
   email: string;
   id: string;
+  profileURL?: string;
+  targetRole?: string;
+  level?: string;
+  techstack?: string[];
+  onboarded?: boolean;
 }
 
 interface InterviewCardProps {
@@ -49,6 +55,8 @@ interface InterviewCardProps {
 
 interface AgentProps {
   userName: string;
+  profileImage?: string;
+  role?: string;
   userId?: string;
   interviewId?: string;
   feedbackId?: string;

@@ -1,4 +1,4 @@
-import { interviewCovers, mappings } from "@/constants";
+import { mappings } from "@/constants";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -41,7 +41,17 @@ export const getTechLogos = async (techArray: string[]) => {
   return results;
 };
 
-export const getRandomInterviewCover = () => {
-  const randomIndex = Math.floor(Math.random() * interviewCovers.length);
-  return `/covers${interviewCovers[randomIndex]}`;
+
+/** Devicon URL for a tech name, or null when we have no mapping (render a text chip instead). */
+export const techIconUrl = (tech: string) => {
+  const n = normalizeTechName(tech);
+  return n ? `${techIconBaseURL}/${n}/${n}-original.svg` : null;
 };
+
+export const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
+
+export const scoreTone = (score: number) =>
+  score >= 80 ? "success" : score >= 60 ? "brand" : score >= 40 ? "warning" : "destructive";
+
+export const scoreLabel = (score: number) =>
+  score >= 85 ? "Excellent" : score >= 70 ? "Strong" : score >= 55 ? "Developing" : "Needs work";
