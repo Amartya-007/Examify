@@ -6,7 +6,8 @@ import { isAuthenticated } from "@/lib/actions/auth.action";
 import { DEMO, demoFeedback } from "@/lib/demo";
 import { Logo } from "@/components/brand/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
-import Orb from "@/components/call/Orb";
+import VoiceRibbon from "@/components/brand/VoiceRibbon";
+import { ScoreRing } from "@/components/app/InterviewCard";
 import CategoryBars from "@/components/report/CategoryBars";
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
@@ -30,22 +31,23 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         </p>
       </div>
 
-      <aside className="relative hidden overflow-hidden border-l bg-surface lg:flex lg:flex-col lg:justify-center lg:px-14 xl:px-20" aria-label="What you get">
-        <div className="bg-night pointer-events-none absolute inset-0" />
-        <div className="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-70" />
-        <div className="relative max-w-lg">
-          <h2 className="text-[2.6rem] leading-[1.05] font-semibold tracking-[-0.04em] text-balance">
-            Rehearse out loud. <span className="text-magic">Walk in ready.</span>
-          </h2>
-          <p className="mt-4 max-w-md text-[15px] text-muted-foreground">
-            A voice interviewer asks real questions for your role, then scores every answer across five categories.
+      <aside className="bg-night relative hidden flex-col justify-between overflow-hidden border-l bg-surface lg:flex" aria-label="What you get">
+        <div className="relative px-14 pt-24 xl:px-20">
+          <h2 className="type-title max-w-lg">Rehearse out loud. Walk in ready.</h2>
+          <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted-foreground">
+            A voice interviewer asks real questions for your role, then scores every answer on five skills.
           </p>
-          <div className="mt-10 rounded-3xl border bg-card p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,.25)]">
+        </div>
+        <div className="relative h-56 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]" aria-hidden="true">
+          <VoiceRibbon strands={6} amplitude={0.32} />
+        </div>
+        <div className="relative px-14 pb-16 xl:px-20">
+          <div className="card-magic max-w-md rounded-[28px] p-6">
             <div className="flex items-center gap-4">
-              <Orb state="speaking" size={56} />
+              <ScoreRing score={sample.totalScore} size={64} />
               <div>
-                <p className="text-sm font-semibold">Frontend Developer · Junior</p>
-                <p className="text-xs text-muted-foreground">Sample report · overall {sample.totalScore}/100</p>
+                <p className="font-semibold">Sample report</p>
+                <p className="text-sm text-muted-foreground">Frontend Developer, junior</p>
               </div>
             </div>
             <CategoryBars categories={sample.categoryScores.slice(0, 3)} showComments={false} className="mt-6 gap-4" />

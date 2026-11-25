@@ -60,7 +60,7 @@ export default function CreateInterview({ userId, initial, mode: initialMode, sh
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">New interview</h1>
+      <h1 className="type-page">New interview</h1>
       <p className="mt-1.5 text-[15px] text-muted-foreground">Questions are written for your role and stack, then read aloud by your AI interviewer.</p>
 
       <div role="radiogroup" aria-label="How do you want to set it up?" className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -87,7 +87,7 @@ export default function CreateInterview({ userId, initial, mode: initialMode, sh
       </div>
 
       {mode === "form" && (
-        <form onSubmit={submit} noValidate className="mt-6 flex flex-col gap-8 rounded-3xl border bg-card p-5 sm:p-8">
+        <form onSubmit={submit} noValidate className="mt-6 flex flex-col gap-8 rounded-[28px] border bg-card p-5 sm:p-8">
           <Field label="Role" id="role" error={error}>
             <Input id="role" value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Frontend Developer" aria-invalid={!!error} list="roles" />
             <datalist id="roles">
@@ -221,14 +221,14 @@ function ShareRoom({ items }: { items: { id: string; role: string; level: string
 
   if (!items.length)
     return (
-      <div className="mt-6 rounded-3xl border border-dashed p-10 text-center">
+      <div className="mt-6 rounded-[28px] border border-dashed p-10 text-center">
         <p className="font-medium">Create an interview first</p>
         <p className="mt-1 text-sm text-muted-foreground">Every interview gets a code you can share.</p>
       </div>
     );
 
   return (
-    <div className="mt-6 grid gap-6 rounded-3xl border bg-card p-5 sm:p-8 md:grid-cols-[1fr_1fr]">
+    <div className="mt-6 grid gap-6 rounded-[28px] border bg-card p-5 sm:p-8 md:grid-cols-[1fr_1fr]">
       <div>
         <h2 className="text-lg font-semibold">Share a practice room</h2>
         <p className="mt-1 text-sm text-muted-foreground">

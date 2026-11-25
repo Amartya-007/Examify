@@ -43,7 +43,7 @@ export function ThemeToggle({ compact = false, className }: { compact?: boolean;
             aria-checked={on}
             onClick={() => setTheme(value)}
             className={cn(
-              "inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm transition",
+              "inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md px-2.5 text-[13px] transition",
               on ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
             )}
           >

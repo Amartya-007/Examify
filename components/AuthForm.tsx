@@ -111,7 +111,7 @@ export default function AuthForm({ type }: { type: FormType }) {
 
   return (
     <div className="animate-rise">
-      <h1 className="text-3xl font-semibold tracking-[-0.03em]">{isSignIn ? "Welcome back" : "Create your account"}</h1>
+      <h1 className="type-page">{isSignIn ? "Welcome back" : "Create your account"}</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">
         {isSignIn ? "Sign in to pick up where you left off." : "Free to start. Your first interview takes about five minutes."}
       </p>

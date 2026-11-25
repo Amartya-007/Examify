@@ -39,7 +39,7 @@ export default function ForgotPassword() {
         <span className="grid size-12 place-items-center rounded-2xl bg-success-soft text-success">
           <MailCheck className="size-6" />
         </span>
-        <h1 className="mt-6 text-3xl font-semibold tracking-[-0.03em]">Check your inbox</h1>
+        <h1 className="mt-6 type-page">Check your inbox</h1>
         <p className="mt-2 text-[15px] text-muted-foreground">
           If an account uses <span className="font-medium text-foreground">{email}</span>, a reset link is on its way. It expires in one hour.
         </p>
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
       <Link href="/sign-in" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Sign in
       </Link>
-      <h1 className="mt-6 text-3xl font-semibold tracking-[-0.03em]">Reset your password</h1>
+      <h1 className="mt-6 type-page">Reset your password</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">Enter your account email and we&apos;ll send you a link to choose a new password.</p>
       <form onSubmit={submit} noValidate className="mt-8 flex flex-col gap-4">
         <Field label="Email" id="email" error={error}>

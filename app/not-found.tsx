@@ -7,7 +7,7 @@ export default function NotFound() {
     <div className="flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center">
       <Logo />
       <p className="num mt-12 text-sm text-muted-foreground">404</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em]">This page isn&apos;t here</h1>
+      <h1 className="mt-2 type-page">This page isn&apos;t here</h1>
       <p className="mt-2 max-w-sm text-[15px] text-muted-foreground">The link may be old, or the interview was deleted. Check the code and try again.</p>
       <div className="mt-8 flex gap-2">
         <Button asChild>

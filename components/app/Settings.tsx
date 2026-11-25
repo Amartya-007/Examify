@@ -34,7 +34,7 @@ import {
 export default function Settings({ user, tab }: { user: User; tab: "profile" | "preferences" | "security" }) {
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Settings</h1>
+      <h1 className="type-page">Settings</h1>
       <Tabs defaultValue={tab} className="mt-6">
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -57,7 +57,7 @@ export default function Settings({ user, tab }: { user: User; tab: "profile" | "
 
 function Section({ title, description, children, footer }: { title: string; description?: string; children: React.ReactNode; footer?: React.ReactNode }) {
   return (
-    <section className="rounded-3xl border bg-card">
+    <section className="rounded-[28px] border bg-card">
       <div className="p-6 sm:p-8">
         <h2 className="text-lg font-semibold">{title}</h2>
         {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
@@ -356,7 +356,7 @@ function Security({ email }: { email: string }) {
         </Button>
       </Section>
 
-      <section className="rounded-3xl border border-destructive/30 bg-card p-6 sm:p-8">
+      <section className="rounded-[28px] border border-destructive/30 bg-card p-6 sm:p-8">
         <h2 className="text-lg font-semibold text-destructive">Delete account</h2>
         <p className="mt-1 max-w-lg text-sm text-muted-foreground">
           Permanently deletes your profile, every interview you created and all your reports. This can&apos;t be undone.

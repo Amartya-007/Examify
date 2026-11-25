@@ -33,7 +33,7 @@ export default function JoinForm() {
       <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-strong">
         <Hash className="size-5" />
       </span>
-      <h1 className="mt-6 text-3xl font-semibold tracking-[-0.03em]">Join an interview</h1>
+      <h1 className="mt-6 type-page">Join an interview</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">Enter the code someone shared with you. You&apos;ll check your devices before it starts.</p>
       <form onSubmit={submit} noValidate className="mt-8 flex w-full flex-col gap-3 text-left">
         <Field label="Join code or link" id="code" error={error}>

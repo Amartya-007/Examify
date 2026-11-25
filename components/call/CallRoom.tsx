@@ -28,6 +28,7 @@ import { readPrefs, writePrefs } from "@/lib/prefs";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand/Logo";
 import Orb from "@/components/call/Orb";
+import VoiceRibbon from "@/components/brand/VoiceRibbon";
 import { playTestSound, useCamera, useDevices, useMicLevel, useTimer } from "@/components/call/useMedia";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -90,6 +91,7 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
   const linesRef = useRef<Line[]>(lines);
   linesRef.current = lines;
   const orbRef = useRef<HTMLDivElement>(null);
+  const levelRef = useRef(0);
   const meterRef = useRef<HTMLDivElement>(null);
   const endedByUser = useRef(false);
 
@@ -146,8 +148,12 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
     const onSpeechEnd = () => {
       setAiSpeaking(false);
       orbRef.current?.style.setProperty("--level", "0");
+      levelRef.current = 0;
     };
-    const onVolume = (v: number) => orbRef.current?.style.setProperty("--level", String(Math.min(1, v * 1.6)));
+    const onVolume = (v: number) => {
+      levelRef.current = Math.min(1, v * 1.6);
+      orbRef.current?.style.setProperty("--level", String(levelRef.current));
+    };
     const onError = (e: unknown) => {
       console.error("Vapi error", e);
       if (!endedByUser.current) {
@@ -189,7 +195,8 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
     let t = 0;
     const id = setInterval(() => {
       t += 0.35;
-      orbRef.current?.style.setProperty("--level", String(Math.abs(Math.sin(t)) * 0.6));
+      levelRef.current = Math.abs(Math.sin(t)) * 0.6;
+      orbRef.current?.style.setProperty("--level", String(levelRef.current));
     }, 120);
     return () => clearInterval(id);
   }, [isPreview, stage]);
@@ -285,7 +292,7 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background">
       {/* Top bar */}
-      <header className="no-print flex h-16 shrink-0 items-center gap-3 border-b px-4 sm:px-6">
+      <header className="no-print flex h-16 shrink-0 items-center gap-3 px-4 sm:px-6">
         {stage === "lobby" || stage === "error" ? (
           <Button asChild variant="ghost" size="icon-sm" aria-label="Back to dashboard">
             <Link href="/dashboard">
@@ -344,34 +351,44 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
 
       {live && (
         <div className="flex min-h-0 flex-1">
-          <main className="flex min-w-0 flex-1 flex-col p-3 sm:p-5">
-            <div className="grid flex-1 gap-3 sm:gap-4 md:grid-cols-[1.35fr_1fr]">
-              {/* AI tile */}
-              <section className="relative flex min-h-[300px] flex-col items-center justify-center overflow-hidden rounded-3xl border bg-surface" aria-label="AI interviewer">
-                <div className="bg-night pointer-events-none absolute inset-0" />
-                <div className="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-60" />
-                <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={180} />
-                <p className="relative mt-6 text-sm font-medium">{stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : "Listening to you"}</p>
-                {prefs.captions && lastLine && stage === "live" && (
-                  <p aria-live="polite" className="relative mx-6 mt-4 line-clamp-3 max-w-xl text-center text-[15px] leading-relaxed text-muted-foreground">
-                    {lastLine.content}
-                  </p>
-                )}
-                <TileLabel name="Examify interviewer" />
-              </section>
-              {/* Self tile */}
-              <section className="relative flex min-h-[200px] items-center justify-center overflow-hidden rounded-3xl border bg-surface" aria-label="Your camera">
+          <main className="relative flex min-w-0 flex-1 flex-col p-3 sm:p-5">
+            {/* Stage: the interviewer is the room */}
+            <section className="bg-night relative flex min-h-[420px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[28px] border bg-surface" aria-label="AI interviewer">
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-56 -translate-y-1/2 opacity-80 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+                <VoiceRibbon strands={6} amplitude={0.34} pointer={false} getLevel={() => levelRef.current} />
+              </div>
+              <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={200} />
+              <p className="glass relative mt-8 rounded-full px-3.5 py-1.5 text-sm font-medium" aria-live="polite">
+                {stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : "Your turn. Take your time."}
+              </p>
+
+              {/* Self view, floating */}
+              <div className="absolute top-3 right-3 aspect-[4/3] w-28 overflow-hidden rounded-2xl border bg-card shadow-xl sm:top-4 sm:right-4 sm:w-52" aria-label="Your camera">
                 {camOn && cam.stream ? (
                   <VideoView stream={cam.stream} />
                 ) : (
-                  <Avatar className="size-24 text-2xl">
-                    {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
-                    <AvatarFallback className="text-2xl">{initials(user.name)}</AvatarFallback>
-                  </Avatar>
+                  <div className="grid size-full place-items-center">
+                    <Avatar className="size-12 sm:size-16">
+                      {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
+                      <AvatarFallback>{initials(user.name)}</AvatarFallback>
+                    </Avatar>
+                  </div>
                 )}
-                <TileLabel name={`${user.name} (you)`} muted={!micOn} />
-              </section>
-            </div>
+                <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-md bg-background/80 px-1.5 py-0.5 text-[11px] font-medium backdrop-blur">
+                  {!micOn && <MicOff className="size-3 text-destructive" />} You
+                </span>
+              </div>
+
+              {/* Captions, like subtitles */}
+              {prefs.captions && lastLine && stage === "live" && (
+                <div className="absolute inset-x-3 bottom-4 flex justify-center sm:bottom-6">
+                  <p className="glass line-clamp-3 max-w-2xl rounded-2xl px-5 py-3 text-center text-[15px] leading-relaxed">
+                    <span className="mr-2 font-medium text-brand-strong">Interviewer</span>
+                    {lastLine.content}
+                  </p>
+                </div>
+              )}
+            </section>
           </main>
 
           {drawer && (
@@ -400,7 +417,7 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
 
       {live && (
         <footer className="no-print sticky bottom-0 z-40 flex justify-center px-3 pt-1 pb-4">
-          <div className="flex items-center gap-1.5 rounded-2xl border bg-card/95 p-1.5 shadow-lg backdrop-blur sm:gap-2 sm:p-2">
+          <div className="glass flex items-center gap-1.5 rounded-2xl p-1.5 sm:gap-2 sm:p-2">
             <DockButton label={micOn ? "Mute microphone" : "Unmute microphone"} active={micOn} onClick={toggleMic}>
               {micOn ? <Mic /> : <MicOff />}
             </DockButton>
@@ -489,7 +506,7 @@ function Lobby(props: {
   return (
     <main className="mx-auto grid w-full max-w-6xl flex-1 items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:gap-12">
       <div>
-        <div className="relative aspect-video overflow-hidden rounded-3xl border bg-surface">
+        <div className="relative aspect-video overflow-hidden rounded-[28px] border bg-surface">
           {camOn && stream ? (
             <VideoView stream={stream} />
           ) : (
@@ -532,8 +549,7 @@ function Lobby(props: {
 
       <div className="flex flex-col gap-6">
         <div>
-          <Badge variant="brand">{mode === "generate" ? "Voice setup" : "Green room"}</Badge>
-          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-4xl">
+          <h1 className="type-page">
             {mode === "generate" ? "Tell us what to practice" : "Ready when you are"}
           </h1>
           <p className="mt-2 text-[15px] text-muted-foreground">
@@ -610,14 +626,6 @@ function VideoView({ stream }: { stream: MediaStream }) {
   return <video ref={ref} autoPlay playsInline muted className="size-full -scale-x-100 object-cover" />;
 }
 
-function TileLabel({ name, muted }: { name: string; muted?: boolean }) {
-  return (
-    <span className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-lg bg-background/80 px-2.5 py-1 text-xs font-medium backdrop-blur">
-      {muted && <MicOff className="size-3.5 text-destructive" />}
-      {name}
-    </span>
-  );
-}
 
 function ConnectionPill({ stage, online }: { stage: Stage; online: boolean }) {
   if (!online)

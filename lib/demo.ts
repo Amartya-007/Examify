@@ -22,6 +22,8 @@ export const demoUser: User = {
 export const demoInterviews: Interview[] = [
   { id: "i1", role: "Frontend Developer", level: "Junior", type: "Technical", techstack: ["react", "typescript", "nextjs"], questions: ["Explain the virtual DOM.", "What are React Server Components?", "How do you type a custom hook?", "How would you debug a slow page?", "Tell me about a bug you fixed."], createdAt: iso(1), userId: "demo-user", finalized: true },
   { id: "i2", role: "Full Stack Engineer", level: "Mid", type: "Mixed", techstack: ["nodejs", "postgresql", "react"], questions: ["Design a URL shortener.", "Tell me about a conflict in your team.", "How do you index a slow query?"], createdAt: iso(4), userId: "demo-user", finalized: true },
+  { id: "i4", role: "React Native Developer", level: "Mid", type: "Technical", techstack: ["react", "typescript", "firebase"], questions: ["a", "b", "c", "d", "e"], createdAt: iso(14), userId: "demo-user", finalized: true },
+  { id: "i5", role: "Frontend Developer", level: "Junior", type: "Behavioral", techstack: ["react", "javascript"], questions: ["a", "b", "c", "d"], createdAt: iso(7), userId: "demo-user", finalized: true },
   { id: "i3", role: "Product Designer", level: "Junior", type: "Behavioral", techstack: ["figma"], questions: ["Walk me through a project.", "How do you handle feedback?"], createdAt: iso(9), userId: "demo-user", finalized: true },
 ];
 
@@ -52,6 +54,22 @@ export const demoFeedback: Record<string, Feedback> = {
       { role: "user", content: "Server Components run only on the server and send a serialized result, so their code never ships to the browser. SSR renders HTML for the first load, but the components still hydrate on the client." },
       { role: "assistant", content: "How would you type a custom hook that fetches data in TypeScript?" },
     ],
+  },
+  i4: {
+    id: "f4", interviewId: "i4", totalScore: 58, createdAt: iso(13),
+    categoryScores: [
+      { name: "Communication Skills", score: 63, comment: "" }, { name: "Technical Knowledge", score: 55, comment: "" },
+      { name: "Problem Solving", score: 60, comment: "" }, { name: "Cultural Fit", score: 58, comment: "" }, { name: "Confidence and Clarity", score: 52, comment: "" },
+    ],
+    strengths: [], areasForImprovement: [], finalAssessment: "Knows the basics of React Native; navigation and state answers stayed shallow.",
+  },
+  i5: {
+    id: "f5", interviewId: "i5", totalScore: 69, createdAt: iso(7),
+    categoryScores: [
+      { name: "Communication Skills", score: 76, comment: "" }, { name: "Technical Knowledge", score: 62, comment: "" },
+      { name: "Problem Solving", score: 68, comment: "" }, { name: "Cultural Fit", score: 74, comment: "" }, { name: "Confidence and Clarity", score: 65, comment: "" },
+    ],
+    strengths: [], areasForImprovement: [], finalAssessment: "Clear teamwork stories; conflict example lacked an outcome.",
   },
   i2: {
     id: "f2", interviewId: "i2", totalScore: 64, createdAt: iso(4),

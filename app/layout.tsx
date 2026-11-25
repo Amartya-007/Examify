@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
+import "@fontsource-variable/bricolage-grotesque/standard.css";
+import "@fontsource-variable/instrument-sans";
 import { GeistMono } from "geist/font/mono";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -26,7 +27,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={GeistMono.variable}>
         <ThemeProvider>
           <TooltipProvider delayDuration={200}>
             {children}

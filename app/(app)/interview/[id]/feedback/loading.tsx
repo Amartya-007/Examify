@@ -5,10 +5,10 @@ export default function Loading() {
       <Skeleton className="h-4 w-24" />
       <Skeleton className="h-10 w-80" />
       <Skeleton className="h-10 w-56" />
-      <Skeleton className="h-56 rounded-3xl" />
+      <Skeleton className="h-56 rounded-[28px]" />
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <Skeleton className="h-96 rounded-3xl" />
-        <Skeleton className="h-96 rounded-3xl" />
+        <Skeleton className="h-96 rounded-[28px]" />
+        <Skeleton className="h-96 rounded-[28px]" />
       </div>
     </div>
   );

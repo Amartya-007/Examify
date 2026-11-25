@@ -81,7 +81,7 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
         <section key={step} className="mt-10 flex-1 animate-rise">
           {step === 0 && (
             <>
-              <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Hi {name.split(" ")[0]}, what are you preparing for?</h1>
+              <h1 className="type-page">Hi {name.split(" ")[0]}, what are you preparing for?</h1>
               <p className="mt-2 text-[15px] text-muted-foreground">We use this to pitch the questions at the right level. You can change it any time.</p>
               <div role="radiogroup" aria-label="Goal" className="mt-8 grid gap-3 sm:grid-cols-2">
                 {GOALS.map((g) => (
@@ -118,7 +118,7 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
 
           {step === 1 && (
             <>
-              <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Which role, which stack?</h1>
+              <h1 className="type-page">Which role, which stack?</h1>
               <p className="mt-2 text-[15px] text-muted-foreground">Pick a role and up to eight technologies you want to be asked about.</p>
               <p className="mt-8 mb-3 text-sm font-medium">Target role</p>
               <div className="flex flex-wrap gap-2">
@@ -206,7 +206,7 @@ function DeviceCheck() {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Quick device check</h1>
+      <h1 className="type-page">Quick device check</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">Interviews happen by voice. Your camera is optional and never leaves your device.</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-[1.2fr_1fr]">
         <div className="relative aspect-video overflow-hidden rounded-2xl border bg-surface">

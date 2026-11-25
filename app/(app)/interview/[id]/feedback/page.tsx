@@ -6,7 +6,9 @@ import { ArrowLeft, Mic, RotateCcw, ThumbsUp, TrendingUp } from "lucide-react";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import { getFeedbackByInterviewId, getInterviewById } from "@/lib/actions/general.action";
 import ScoreGauge from "@/components/report/ScoreGauge";
-import CategoryBars from "@/components/report/CategoryBars";
+import { ScoreRing } from "@/components/app/InterviewCard";
+import { shortCategory } from "@/lib/stats";
+import { scoreLabel } from "@/lib/utils";
 import Radar from "@/components/report/Radar";
 import PrintButton from "@/components/report/PrintButton";
 import TechIcons from "@/components/TechIcons";
@@ -43,6 +45,7 @@ export default async function Feedback({ params }: RouteParams) {
     );
 
   const transcript = feedback.transcript || [];
+  const weakest = [...feedback.categoryScores].sort((a, b) => a.score - b.score)[0];
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -57,7 +60,7 @@ export default async function Feedback({ params }: RouteParams) {
             <Badge variant="outline">{interview.level}</Badge>
             <span className="text-sm text-muted-foreground">{dayjs(feedback.createdAt).format("MMM D, YYYY · h:mm A")}</span>
           </div>
-          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">{interview.role} interview</h1>
+          <h1 className="type-page mt-3">{interview.role} interview</h1>
           <TechIcons techStack={interview.techstack} max={6} className="mt-3" />
         </div>
         <div className="no-print flex gap-2">
@@ -79,39 +82,69 @@ export default async function Feedback({ params }: RouteParams) {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6 flex flex-col gap-6">
-          <section className="grid gap-6 rounded-3xl border bg-card p-6 sm:p-8 md:grid-cols-[auto_1fr] md:items-center md:gap-10">
-            <ScoreGauge score={feedback.totalScore} className="mx-auto" />
+          {/* Verdict: score, judgement in a sentence, and the one next action */}
+          <section className="card-magic grid gap-8 rounded-[28px] p-6 sm:p-8 lg:grid-cols-[auto_1fr_300px] lg:items-center">
+            <ScoreGauge score={feedback.totalScore} size={240} className="mx-auto" />
             <div>
-              <h2 className="text-sm font-medium text-muted-foreground">Overall assessment</h2>
-              <p className="mt-2 text-[17px] leading-relaxed text-pretty">{feedback.finalAssessment}</p>
+              <h2 className="type-page">{scoreLabel(feedback.totalScore)}</h2>
+              <p className="mt-3 text-[16px] leading-relaxed text-pretty">{feedback.finalAssessment}</p>
+            </div>
+            <div className="rounded-2xl bg-surface p-5">
+              <p className="text-sm font-medium">Work on next</p>
+              <p className="mt-2 flex items-baseline justify-between gap-3">
+                <span className="text-lg font-semibold">{shortCategory(weakest.name)}</span>
+                <span className="num text-sm text-warning">{weakest.score}/100</span>
+              </p>
+              {weakest.comment && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{weakest.comment}</p>}
+              <Button asChild variant="brand" className="no-print mt-4 w-full">
+                <Link href={`/interview/${id}`}>
+                  <RotateCcw /> Retake to improve it
+                </Link>
+              </Button>
             </div>
           </section>
 
-          <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <div className="rounded-3xl border bg-card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold">Category breakdown</h2>
-              <CategoryBars categories={feedback.categoryScores} className="mt-6" />
-            </div>
-            <div className="flex flex-col items-center justify-center rounded-3xl border bg-card p-6">
-              <h2 className="self-start text-lg font-semibold">Shape of your answers</h2>
-              <Radar categories={feedback.categoryScores} />
-            </div>
-          </section>
+          <div className="grid gap-6 lg:grid-cols-12">
+            <section aria-labelledby="breakdown" className="rounded-[28px] border bg-card p-6 sm:p-8 lg:col-span-7">
+              <h2 id="breakdown" className="text-xl font-semibold tracking-[-0.02em]">
+                Skill by skill
+              </h2>
+              <ul className="mt-2 divide-y">
+                {[...feedback.categoryScores].sort((a, b) => b.score - a.score).map((c) => (
+                  <li key={c.name} className="flex gap-4 py-5">
+                    <ScoreRing score={c.score} size={48} />
+                    <div className="min-w-0">
+                      <p className="font-medium">{shortCategory(c.name)}</p>
+                      {c.comment ? <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{c.comment}</p> : <p className="mt-1 text-sm text-muted-foreground">No comment for this skill.</p>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-          <section className="grid gap-6 md:grid-cols-2">
-            <ListCard title="What went well" icon={<ThumbsUp className="size-4" />} tone="success" items={feedback.strengths} empty="No specific strengths recorded." />
-            <ListCard title="What to work on" icon={<TrendingUp className="size-4" />} tone="brand" items={feedback.areasForImprovement} empty="Nothing flagged. Nice." />
-          </section>
+            <div className="flex flex-col gap-6 lg:col-span-5">
+              <section className="flex flex-col items-center rounded-[28px] border bg-card p-6">
+                <h2 className="self-start text-xl font-semibold tracking-[-0.02em]">Shape of your answers</h2>
+                <Radar categories={feedback.categoryScores} size={300} />
+              </section>
+              <ListCard title="What went well" icon={<ThumbsUp className="size-4" />} tone="success" items={feedback.strengths} empty="No specific strengths recorded." />
+              <ListCard title="What to work on" icon={<TrendingUp className="size-4" />} tone="brand" items={feedback.areasForImprovement} empty="Nothing flagged." />
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="transcript" className="mt-6">
-          <section className="rounded-3xl border bg-card p-6 sm:p-8">
+          <section className="mx-auto max-w-3xl rounded-[28px] border bg-card p-6 sm:p-8">
             {transcript.length ? (
-              <ol className="flex flex-col gap-5">
+              <ol className="flex flex-col gap-4">
                 {transcript.map((t, i) => (
-                  <li key={i} className="grid gap-1 sm:grid-cols-[120px_1fr] sm:gap-6">
-                    <span className={`text-sm font-medium ${t.role === "assistant" ? "text-brand-strong" : ""}`}>{t.role === "assistant" ? "Interviewer" : user.name.split(" ")[0]}</span>
-                    <p className="text-[15px] leading-relaxed text-muted-foreground">{t.content}</p>
+                  <li key={i} className={`flex ${t.role === "assistant" ? "" : "justify-end"}`}>
+                    <p className={`max-w-[85%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed ${t.role === "assistant" ? "rounded-tl-md bg-secondary" : "rounded-tr-md bg-brand-soft"}`}>
+                      <span className={`mb-1 block text-xs font-medium ${t.role === "assistant" ? "text-brand-strong" : "text-muted-foreground"}`}>
+                        {t.role === "assistant" ? "Interviewer" : user.name.split(" ")[0]}
+                      </span>
+                      {t.content}
+                    </p>
                   </li>
                 ))}
               </ol>
@@ -127,8 +160,8 @@ export default async function Feedback({ params }: RouteParams) {
 
 function ListCard({ title, icon, tone, items, empty }: { title: string; icon: React.ReactNode; tone: "success" | "brand"; items: string[]; empty: string }) {
   return (
-    <div className="rounded-3xl border bg-card p-6 sm:p-8">
-      <h2 className="flex items-center gap-2.5 text-lg font-semibold">
+    <div className="rounded-[28px] border bg-card p-6">
+      <h2 className="flex items-center gap-2.5 font-sans text-base font-semibold">
         <span className={`grid size-8 place-items-center rounded-lg ${tone === "success" ? "bg-success-soft text-success" : "bg-brand-soft text-brand-strong"}`}>{icon}</span>
         {title}
       </h2>

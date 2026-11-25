@@ -13,13 +13,13 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.004 265);
+  --background: oklch(0.975 0.008 268);
   --foreground: oklch(0.2 0.045 268);
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
-  --surface: oklch(0.966 0.008 265);
+  --surface: oklch(0.955 0.014 268);
 
   --primary: oklch(0.25 0.075 268);
   --primary-foreground: oklch(0.985 0.004 265);
@@ -57,13 +57,13 @@
 }
 
 .dark {
-  --background: oklch(0.155 0.035 268);
+  --background: oklch(0.13 0.04 270);
   --foreground: oklch(0.955 0.012 262);
-  --card: oklch(0.195 0.042 268);
+  --card: oklch(0.175 0.048 270);
   --card-foreground: var(--foreground);
   --popover: oklch(0.21 0.045 268);
   --popover-foreground: var(--foreground);
-  --surface: oklch(0.175 0.04 268);
+  --surface: oklch(0.155 0.045 270);
 
   --primary: oklch(0.955 0.012 262);
   --primary-foreground: oklch(0.2 0.05 268);
@@ -95,7 +95,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Instrument Sans Variable", ui-sans-serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius-sm: calc(var(--radius) - 6px);
@@ -165,7 +166,11 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "ss01", "cv11";
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    text-wrap: balance;
   }
   :focus-visible {
     outline: 2px solid var(--brand);
@@ -261,4 +266,37 @@
 @keyframes card-drift {
   0%, 100% { background-position: 0 0, 0% 50%; }
   50% { background-position: 0 0, 100% 50%; }
+}
+
+/* Display type scale (Bricolage). */
+@utility type-hero { font-family: var(--font-display); font-size: clamp(2.9rem, 7.2vw, 6.4rem); line-height: 0.95; letter-spacing: -0.045em; font-weight: 640; font-variation-settings: "wdth" 92; }
+@utility type-title { font-family: var(--font-display); font-size: clamp(2rem, 3.6vw, 3.25rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 620; }
+@utility type-page { font-family: var(--font-display); font-size: clamp(1.75rem, 2.4vw, 2.25rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 620; }
+
+/* Glass panel used for the call dock and floating UI. */
+@utility glass {
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: inset 0 1px 0 0 color-mix(in oklab, white 10%, transparent), 0 20px 50px -20px rgba(2, 6, 30, 0.6);
+  border: 1px solid color-mix(in oklab, var(--magic-2) 20%, var(--border));
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass { backdrop-filter: none; background: var(--card); }
+}
+
+/* Spotlight: cursor-following glow, driven by --mx/--my set from JS. */
+@utility spotlight {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in oklab, var(--magic-2) 16%, transparent), transparent 60%);
+  }
+  &:hover::before { opacity: 1; }
 }
