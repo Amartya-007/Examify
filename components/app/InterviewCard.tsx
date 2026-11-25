@@ -17,7 +17,7 @@ export default function InterviewCard({ interview, feedback, community = false }
   const date = dayjs(feedback?.createdAt || createdAt);
 
   return (
-    <article className="group relative flex flex-col rounded-2xl border bg-card p-5 transition hover:border-foreground/25 hover:shadow-[0_12px_30px_-18px_rgba(0,0,0,.35)]">
+    <article className="card-magic group relative flex flex-col rounded-2xl p-5 transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-24px_var(--magic-2)] motion-reduce:hover:translate-y-0" style={{ animationDelay: `-${(id.charCodeAt(0) + id.length * 7) % 9}s` }}>
       <div className="flex items-center justify-between gap-3">
         <Badge variant={typeTone[type] || "outline"}>{/mix/i.test(type) ? "Mixed" : type}</Badge>
         <time dateTime={date.toISOString()} className="text-xs text-muted-foreground">
@@ -39,7 +39,7 @@ export default function InterviewCard({ interview, feedback, community = false }
         {feedback && feedback.finalAssessment && <span className="sr-only">{feedback.finalAssessment}</span>}
       </div>
 
-      <div className="mt-5 flex items-end justify-between gap-3 border-t pt-4">
+      <div className="mt-5 flex items-end justify-between gap-3 border-t border-[color-mix(in_oklab,var(--magic-2)_18%,var(--border))] pt-4">
         {score != null ? (
           <div>
             <p className="text-xs text-muted-foreground">Score</p>
