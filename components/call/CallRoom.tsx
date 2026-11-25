@@ -348,6 +348,7 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
             <div className="grid flex-1 gap-3 sm:gap-4 md:grid-cols-[1.35fr_1fr]">
               {/* AI tile */}
               <section className="relative flex min-h-[300px] flex-col items-center justify-center overflow-hidden rounded-3xl border bg-surface" aria-label="AI interviewer">
+                <div className="bg-night pointer-events-none absolute inset-0" />
                 <div className="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-60" />
                 <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={180} />
                 <p className="relative mt-6 text-sm font-medium">{stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : "Listening to you"}</p>

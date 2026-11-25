@@ -31,10 +31,11 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
       </div>
 
       <aside className="relative hidden overflow-hidden border-l bg-surface lg:flex lg:flex-col lg:justify-center lg:px-14 xl:px-20" aria-label="What you get">
+        <div className="bg-night pointer-events-none absolute inset-0" />
         <div className="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-70" />
         <div className="relative max-w-lg">
           <h2 className="text-[2.6rem] leading-[1.05] font-semibold tracking-[-0.04em] text-balance">
-            Rehearse out loud. <span className="text-muted-foreground">Walk in ready.</span>
+            Rehearse out loud. <span className="text-magic">Walk in ready.</span>
           </h2>
           <p className="mt-4 max-w-md text-[15px] text-muted-foreground">
             A voice interviewer asks real questions for your role, then scores every answer across five categories.

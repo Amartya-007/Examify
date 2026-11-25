@@ -6,86 +6,92 @@
 
 /*
  * Examify design tokens.
- * Near-monochrome neutrals + one brand accent ("signal" orange, the on-air light).
- * Primary actions are ink (inverted in dark), so they meet AA in both themes;
- * the accent marks brand, live state, focus and highlights.
+ * Midnight-blue neutrals with one "magic" accent: a cyan to indigo to violet blend,
+ * a nod to the original shifting-blue wordmark. Solid --brand is used where a flat
+ * colour is needed (text, rings, bars); --magic is the gradient for brand moments.
  */
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.002 260);
-  --foreground: oklch(0.18 0.012 262);
+  --background: oklch(0.985 0.004 265);
+  --foreground: oklch(0.2 0.045 268);
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
-  --surface: oklch(0.965 0.003 260);
+  --surface: oklch(0.966 0.008 265);
 
-  --primary: oklch(0.2 0.012 262);
-  --primary-foreground: oklch(0.985 0.002 260);
-  --secondary: oklch(0.955 0.004 260);
+  --primary: oklch(0.25 0.075 268);
+  --primary-foreground: oklch(0.985 0.004 265);
+  --secondary: oklch(0.952 0.01 265);
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.955 0.004 260);
-  --muted-foreground: oklch(0.49 0.016 262);
-  --accent: oklch(0.955 0.004 260);
+  --muted: oklch(0.948 0.01 265);
+  --muted-foreground: oklch(0.5 0.035 266);
+  --accent: oklch(0.95 0.012 265);
   --accent-foreground: var(--foreground);
 
-  --brand: oklch(0.66 0.19 42);
-  --brand-strong: oklch(0.55 0.17 40);
-  --brand-soft: oklch(0.66 0.19 42 / 0.12);
+  --brand: oklch(0.56 0.2 264);
+  --brand-strong: oklch(0.47 0.2 267);
+  --brand-soft: oklch(0.56 0.2 264 / 0.11);
   --brand-foreground: oklch(0.99 0 0);
+  --magic-1: oklch(0.72 0.14 215);
+  --magic-2: oklch(0.58 0.2 260);
+  --magic-3: oklch(0.52 0.22 285);
 
-  --success: oklch(0.55 0.14 155);
-  --success-soft: oklch(0.55 0.14 155 / 0.12);
+  --success: oklch(0.55 0.14 160);
+  --success-soft: oklch(0.55 0.14 160 / 0.12);
   --warning: oklch(0.62 0.14 70);
   --warning-soft: oklch(0.75 0.15 75 / 0.16);
   --destructive: oklch(0.56 0.2 25);
   --destructive-soft: oklch(0.56 0.2 25 / 0.1);
 
-  --border: oklch(0.915 0.005 260);
-  --input: oklch(0.88 0.006 260);
-  --ring: oklch(0.66 0.19 42 / 0.55);
+  --border: oklch(0.912 0.012 265);
+  --input: oklch(0.875 0.016 265);
+  --ring: oklch(0.56 0.2 264 / 0.5);
 
-  --chart-1: oklch(0.66 0.19 42);
-  --chart-2: oklch(0.55 0.14 155);
-  --chart-3: oklch(0.55 0.15 255);
+  --chart-1: oklch(0.56 0.2 264);
+  --chart-2: oklch(0.55 0.14 160);
+  --chart-3: oklch(0.72 0.14 215);
   --chart-4: oklch(0.62 0.14 70);
-  --chart-5: oklch(0.55 0.17 320);
+  --chart-5: oklch(0.52 0.22 285);
 }
 
 .dark {
-  --background: oklch(0.145 0.006 262);
-  --foreground: oklch(0.965 0.003 260);
-  --card: oklch(0.185 0.007 262);
+  --background: oklch(0.155 0.035 268);
+  --foreground: oklch(0.955 0.012 262);
+  --card: oklch(0.195 0.042 268);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.2 0.008 262);
+  --popover: oklch(0.21 0.045 268);
   --popover-foreground: var(--foreground);
-  --surface: oklch(0.17 0.007 262);
+  --surface: oklch(0.175 0.04 268);
 
-  --primary: oklch(0.965 0.003 260);
-  --primary-foreground: oklch(0.17 0.008 262);
-  --secondary: oklch(0.24 0.008 262);
+  --primary: oklch(0.955 0.012 262);
+  --primary-foreground: oklch(0.2 0.05 268);
+  --secondary: oklch(0.255 0.045 268);
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.24 0.008 262);
-  --muted-foreground: oklch(0.72 0.012 262);
-  --accent: oklch(0.25 0.009 262);
+  --muted: oklch(0.255 0.045 268);
+  --muted-foreground: oklch(0.74 0.03 262);
+  --accent: oklch(0.26 0.048 268);
   --accent-foreground: var(--foreground);
 
-  --brand: oklch(0.72 0.18 46);
-  --brand-strong: oklch(0.78 0.15 50);
-  --brand-soft: oklch(0.72 0.18 46 / 0.16);
-  --brand-foreground: oklch(0.17 0.01 262);
+  --brand: oklch(0.7 0.16 255);
+  --brand-strong: oklch(0.8 0.12 240);
+  --brand-soft: oklch(0.7 0.16 255 / 0.17);
+  --brand-foreground: oklch(0.99 0 0);
+  --magic-1: oklch(0.82 0.13 210);
+  --magic-2: oklch(0.66 0.19 258);
+  --magic-3: oklch(0.65 0.21 290);
 
-  --success: oklch(0.74 0.15 155);
-  --success-soft: oklch(0.74 0.15 155 / 0.14);
+  --success: oklch(0.76 0.15 160);
+  --success-soft: oklch(0.76 0.15 160 / 0.14);
   --warning: oklch(0.8 0.14 78);
   --warning-soft: oklch(0.8 0.14 78 / 0.14);
   --destructive: oklch(0.68 0.19 25);
   --destructive-soft: oklch(0.68 0.19 25 / 0.14);
 
-  --border: oklch(1 0 0 / 0.09);
-  --input: oklch(1 0 0 / 0.14);
-  --ring: oklch(0.72 0.18 46 / 0.6);
+  --border: oklch(0.8 0.08 265 / 0.12);
+  --input: oklch(0.8 0.08 265 / 0.18);
+  --ring: oklch(0.7 0.16 255 / 0.6);
 }
 
 @theme inline {
@@ -131,6 +137,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  --color-magic-1: var(--magic-1);
+  --color-magic-2: var(--magic-2);
+  --color-magic-3: var(--magic-3);
 
   --animate-orb: orb 2.4s ease-in-out infinite;
   --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -199,4 +209,28 @@
 @media print {
   .no-print { display: none !important; }
   body { background: white; color: black; }
+}
+
+/* The "magic" brand gradient: slowly drifting cyan, blue, indigo, violet. */
+@utility text-magic {
+  background-image: linear-gradient(100deg, var(--magic-1), var(--magic-2) 35%, var(--magic-3) 65%, var(--magic-1));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: magic-drift 8s ease-in-out infinite;
+}
+@utility bg-magic {
+  background-image: linear-gradient(110deg, var(--magic-1), var(--magic-2) 40%, var(--magic-3) 75%, var(--magic-2));
+  background-size: 250% 100%;
+  animation: magic-drift 10s ease-in-out infinite;
+}
+@utility bg-night {
+  background-image:
+    radial-gradient(60% 50% at 80% 0%, oklch(0.6 0.2 265 / 0.16), transparent 70%),
+    radial-gradient(40% 40% at 0% 30%, oklch(0.75 0.14 215 / 0.12), transparent 70%);
+}
+@keyframes magic-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }

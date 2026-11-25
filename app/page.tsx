@@ -59,11 +59,12 @@ export default async function Landing() {
       <main id="main">
         {/* Hero */}
         <section className="relative overflow-hidden">
+          <div className="bg-night pointer-events-none absolute inset-0" />
           <div className="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-60" />
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pt-14 pb-20 sm:px-6 md:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-28">
             <div className="animate-rise">
               <h1 className="text-[2.75rem] leading-[1.02] font-semibold tracking-[-0.045em] text-balance sm:text-6xl lg:text-[4.25rem]">
-                Practice the interview before the interview.
+                Practice the interview <span className="text-magic">before the interview.</span>
               </h1>
               <p className="mt-6 max-w-lg text-lg text-muted-foreground text-pretty">
                 Answer out loud to an AI interviewer, then get a scored report with the full transcript.
@@ -182,7 +183,7 @@ export default async function Landing() {
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col justify-between rounded-3xl border bg-brand-soft p-7 md:col-span-2">
+              <div className="bg-night flex flex-col justify-between rounded-3xl border bg-brand-soft p-7 md:col-span-2">
                 <Mic className="size-6 text-brand-strong" />
                 <div className="mt-10">
                   <h3 className="text-lg font-semibold">A green room first</h3>
@@ -238,7 +239,7 @@ export default async function Landing() {
         {/* CTA */}
         <section className="border-t">
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-8 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-between lg:py-24">
-            <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.035em] text-balance sm:text-5xl">Your next interview is a rehearsal away.</h2>
+            <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.035em] text-balance sm:text-5xl">Your next interview is <span className="text-magic">a rehearsal away.</span></h2>
             <Button asChild size="xl" variant="brand">
               <Link href={primary.href}>
                 {primary.label} <ArrowRight />
