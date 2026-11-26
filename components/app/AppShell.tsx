@@ -11,6 +11,7 @@ import { signOut } from "@/lib/actions/auth.action";
 import { cn } from "@/lib/utils";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
+import AvatarWave from "@/components/brand/AvatarWave";
 import CommandMenu, { useCommandMenu, type PaletteInterview } from "@/components/app/CommandMenu";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -28,7 +29,6 @@ type Report = { id: string; interviewId: string; role: string; score: number; cr
 
 const NAV = [
   { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/interview", label: "New interview", icon: Plus, exact: true },
   { href: "/interview/voice", label: "Voice setup", icon: Mic },
 ];
 
@@ -85,7 +85,7 @@ export default function AppShell({ user, reports, interviews, children }: { user
 
         <nav aria-label="Main" className="mt-6 flex flex-col gap-0.5 px-3">
           {NAV.map((n) => {
-            const active = isActive(n.href, n.exact);
+            const active = isActive(n.href);
             return (
               <Tooltip key={n.href}>
                 <TooltipTrigger asChild>
@@ -136,10 +136,12 @@ export default function AppShell({ user, reports, interviews, children }: { user
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl p-1.5 text-left outline-none hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring lg:justify-start lg:p-2">
-              <Avatar className="size-8">
-                {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
-                <AvatarFallback className="text-xs">{initials(user.name)}</AvatarFallback>
-              </Avatar>
+              <AvatarWave size={32} halo={1.7}>
+                <Avatar className="size-8">
+                  {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
+                  <AvatarFallback className="text-xs">{initials(user.name)}</AvatarFallback>
+                </Avatar>
+              </AvatarWave>
               <span className="hidden min-w-0 flex-1 lg:block">
                 <span className="block truncate text-sm font-medium">{user.name}</span>
                 <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
@@ -178,11 +180,13 @@ export default function AppShell({ user, reports, interviews, children }: { user
           <Search className="size-[18px]" />
         </button>
         <ThemeToggle compact />
-        <Link href="/settings" aria-label="Account">
-          <Avatar className="size-8">
-            {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
-            <AvatarFallback className="text-xs">{initials(user.name)}</AvatarFallback>
-          </Avatar>
+        <Link href="/settings" aria-label="Account" className="ml-1 grid size-10 place-items-center">
+          <AvatarWave size={30} halo={1.45}>
+            <Avatar className="size-[30px]">
+              {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
+              <AvatarFallback className="text-[11px]">{initials(user.name)}</AvatarFallback>
+            </Avatar>
+          </AvatarWave>
         </Link>
       </header>
 
@@ -192,7 +196,7 @@ export default function AppShell({ user, reports, interviews, children }: { user
 
       {/* Mobile tab bar */}
       <nav aria-label="Main" className="no-print fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        {[NAV[0], NAV[1], NAV[2], { href: "/settings", label: "Settings", icon: Settings }].map((n) => {
+        {[NAV[0], { href: "/interview", label: "New interview", icon: Plus, exact: true }, NAV[1], { href: "/settings", label: "Settings", icon: Settings }].map((n) => {
           const active = isActive(n.href, "exact" in n ? n.exact : false);
           return (
             <Link key={n.href} href={n.href} aria-current={active ? "page" : undefined} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-muted-foreground", active && "text-foreground")}>

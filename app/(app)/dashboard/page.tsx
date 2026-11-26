@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
@@ -10,6 +9,7 @@ import Progress from "@/components/app/dashboard/Progress";
 import SkillMap from "@/components/app/dashboard/SkillMap";
 import InterviewCard from "@/components/app/InterviewCard";
 import InterviewList from "@/components/app/InterviewList";
+import Carousel from "@/components/app/Carousel";
 
 export const metadata = { title: "Home" };
 
@@ -73,9 +73,6 @@ export default async function Dashboard() {
             <h2 id="mine" className="text-xl font-semibold tracking-[-0.02em]">
               Your interviews and reports
             </h2>
-            <Link href="/interview" className="-my-2 inline-flex min-h-10 items-center text-sm font-medium text-brand-strong hover:underline">
-              Create new
-            </Link>
           </div>
           {items.length ? (
             <InterviewList items={items} />
@@ -97,13 +94,11 @@ export default async function Dashboard() {
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">Interviews other people built. Take any of them as they are.</p>
           </div>
-          <div className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+          <Carousel label="Interviews from the community" itemClassName="w-[82%] sm:w-[320px]">
             {explore.map((i) => (
-              <div key={i.id} className="w-[290px] shrink-0 snap-start sm:w-[320px]">
-                <InterviewCard interview={i} community />
-              </div>
+              <InterviewCard key={i.id} interview={i} community />
             ))}
-          </div>
+          </Carousel>
         </section>
       )}
     </div>

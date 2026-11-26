@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import Orb from "@/components/call/Orb";
+import VoiceRibbon from "@/components/brand/VoiceRibbon";
 import ScoreGauge from "@/components/report/ScoreGauge";
 import CategoryBars from "@/components/report/CategoryBars";
 
@@ -17,7 +17,8 @@ type Line = { role: string; content: string };
 export default function LandingDemo({ lines, report }: { lines: Line[]; report: Feedback }) {
   const [step, setStep] = useState(0); // number of lines shown; lines.length + 1 = report
   const [playing, setPlaying] = useState(false);
-  const orb = useRef<HTMLDivElement>(null);
+  const level = useRef(0);
+  const pitch = useRef(0.45);
   const list = useRef<HTMLOListElement>(null);
   const done = step > lines.length;
   const speaking = playing && !done && lines[Math.max(0, step - 1)]?.role === "assistant";
@@ -49,19 +50,21 @@ export default function LandingDemo({ lines, report }: { lines: Line[]; report: 
     if (ol) ol.scrollTo({ top: ol.scrollHeight, behavior: "smooth" });
   }, [step]);
 
-  // Orb follows a simulated voice while the interviewer "speaks".
+  // The wave follows a simulated voice: the interviewer is brighter and higher, the candidate lower.
+  const talking = playing && !done && step > 0;
   useEffect(() => {
-    if (!speaking) {
-      orb.current?.style.setProperty("--level", "0");
+    if (!talking) {
+      level.current = 0;
       return;
     }
     let t = 0;
     const id = setInterval(() => {
       t += 0.4;
-      orb.current?.style.setProperty("--level", String(Math.abs(Math.sin(t) * Math.cos(t * 0.37)) * 0.9));
+      level.current = Math.abs(Math.sin(t) * Math.cos(t * 0.37)) * (speaking ? 0.9 : 0.7);
+      pitch.current = (speaking ? 0.66 : 0.3) + Math.sin(t * 0.3) * 0.1;
     }, 90);
     return () => clearInterval(id);
-  }, [speaking]);
+  }, [talking, speaking]);
 
   const control = () => {
     if (done) {
@@ -99,7 +102,9 @@ export default function LandingDemo({ lines, report }: { lines: Line[]; report: 
             </div>
           ) : (
             <>
-              <Orb ref={orb} state={!playing && step === 0 ? "idle" : speaking ? "speaking" : "listening"} size={170} />
+              <div className="h-44 w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+                <VoiceRibbon strands={6} amplitude={0.32} pointer={false} getLevel={playing ? () => level.current : undefined} getPitch={() => pitch.current} />
+              </div>
               <p className="text-sm font-medium">
                 {step === 0 ? "Press play to hear how a session runs" : speaking ? "Interviewer is asking" : "Candidate is answering"}
               </p>

@@ -27,7 +27,9 @@ import { createFeedback } from "@/lib/actions/general.action";
 import { readPrefs, writePrefs } from "@/lib/prefs";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand/Logo";
-import Orb from "@/components/call/Orb";
+import VoiceRibbon from "@/components/brand/VoiceRibbon";
+import AvatarWave from "@/components/brand/AvatarWave";
+import { useVoiceAnalyser } from "@/components/call/useVoice";
 import { playTestSound, useCamera, useDevices, useMicLevel, useTimer } from "@/components/call/useMedia";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +38,6 @@ import { Textarea } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -89,8 +90,8 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
   const startedAt = useRef<number>(0);
   const linesRef = useRef<Line[]>(lines);
   linesRef.current = lines;
-  const orbRef = useRef<HTMLDivElement>(null);
   const levelRef = useRef(0);
+  const aiPitchRef = useRef(0.55);
   const meterRef = useRef<HTMLDivElement>(null);
   const endedByUser = useRef(false);
 
@@ -146,12 +147,10 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
     const onSpeechStart = () => setAiSpeaking(true);
     const onSpeechEnd = () => {
       setAiSpeaking(false);
-      orbRef.current?.style.setProperty("--level", "0");
       levelRef.current = 0;
     };
     const onVolume = (v: number) => {
       levelRef.current = Math.min(1, v * 1.6);
-      orbRef.current?.style.setProperty("--level", String(levelRef.current));
     };
     const onError = (e: unknown) => {
       console.error("Vapi error", e);
@@ -188,17 +187,28 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
     }
   }, [isPreview]);
 
-  // Simulated voice level in preview so the orb is alive in screenshots/design review.
+  // The interviewer's voice drives the wave while it speaks; Vapi only reports loudness,
+  // so pitch drifts gently with it.
   useEffect(() => {
-    if (!isPreview || stage !== "live") return;
+    if (!aiSpeaking) return;
     let t = 0;
     const id = setInterval(() => {
-      t += 0.35;
-      levelRef.current = Math.abs(Math.sin(t)) * 0.6;
-      orbRef.current?.style.setProperty("--level", String(levelRef.current));
-    }, 120);
+      t += 0.12;
+      aiPitchRef.current = 0.5 + Math.sin(t) * 0.18 + levelRef.current * 0.15;
+      if (isPreview) levelRef.current = Math.abs(Math.sin(t * 3)) * 0.55 * (0.6 + Math.random() * 0.4);
+    }, 100);
     return () => clearInterval(id);
-  }, [isPreview, stage]);
+  }, [aiSpeaking, isPreview]);
+
+  // Preview: take turns so both voices show (interviewer speaks, then listens to you).
+  useEffect(() => {
+    if (!isPreview || stage !== "live") return;
+    const id = setTimeout(() => setAiSpeaking((v) => !v), aiSpeaking ? 5500 : 8000);
+    return () => clearTimeout(id);
+  }, [isPreview, stage, aiSpeaking]);
+
+  // While the interviewer listens, the wave follows your microphone (loudness and pitch).
+  const voice = useVoiceAnalyser(stage === "live" && micOn, micId);
 
   const finish = useCallback(async () => {
     setStage("analyzing");
@@ -353,9 +363,19 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
           <main className="relative flex min-w-0 flex-1 flex-col p-3 sm:p-5">
             {/* Stage: the interviewer is the room */}
             <section className="bg-night relative flex min-h-[420px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[28px] border bg-surface" aria-label="AI interviewer">
-              <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={240} />
-              <p className="glass relative mt-8 rounded-full px-3.5 py-1.5 text-sm font-medium" aria-live="polite">
-                {stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : "Your turn. Take your time."}
+              <div className="relative h-56 w-full sm:h-72 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+                <VoiceRibbon
+                  strands={7}
+                  amplitude={0.34}
+                  pointer={false}
+                  speed={stage === "connecting" ? 0.6 : 1}
+                  getLevel={stage === "connecting" ? undefined : () => (aiSpeaking ? levelRef.current : voice.level.current)}
+                  getPitch={stage === "connecting" ? undefined : () => (aiSpeaking ? aiPitchRef.current : voice.pitch.current)}
+                />
+              </div>
+              <p className="glass relative mt-2 flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium" aria-live="polite">
+                <span className={cn("size-2 rounded-full", stage === "connecting" ? "animate-pulse bg-warning" : aiSpeaking ? "bg-magic-3" : "bg-magic-1")} />
+                {stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : micOn ? "Listening to you. Take your time." : "Your microphone is muted"}
               </p>
 
               {/* Self view, floating */}
@@ -364,10 +384,12 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
                   <VideoView stream={cam.stream} />
                 ) : (
                   <div className="grid size-full place-items-center">
-                    <Avatar className="size-12 sm:size-16">
-                      {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
-                      <AvatarFallback>{initials(user.name)}</AvatarFallback>
-                    </Avatar>
+                    <AvatarWave size={56} halo={2.1} getLevel={() => (aiSpeaking ? 0.05 : voice.level.current)} getPitch={() => voice.pitch.current}>
+                      <Avatar className="size-14">
+                        {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
+                        <AvatarFallback>{initials(user.name)}</AvatarFallback>
+                      </Avatar>
+                    </AvatarWave>
                   </div>
                 )}
                 <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-md bg-background/80 px-1.5 py-0.5 text-[11px] font-medium backdrop-blur">
@@ -421,16 +443,11 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
               {camOn ? <Video /> : <VideoOff />}
             </DockButton>
             <Popover>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <PopoverTrigger asChild>
-                    <Button variant="secondary" size="icon" aria-label="Device settings">
-                      <Settings2 />
-                    </Button>
-                  </PopoverTrigger>
-                </TooltipTrigger>
-                <TooltipContent>Devices</TooltipContent>
-              </Tooltip>
+              <PopoverTrigger asChild>
+                <button className="dock-btn" aria-label="Device settings" data-tip="Devices">
+                  <Settings2 />
+                </button>
+              </PopoverTrigger>
               <PopoverContent side="top" className="w-80">
                 <p className="mb-3 text-sm font-semibold">Devices</p>
                 {deviceControls}
@@ -442,10 +459,10 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
             <span className="mx-1 h-6 w-px bg-border" />
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" className="gap-2 px-4">
+                <button className="dock-btn dock-end" aria-label="End interview" data-tip="End interview">
                   <PhoneOff />
                   <span className="hidden sm:inline">End</span>
-                </Button>
+                </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogTitle>{mode === "generate" ? "End setup?" : "End the interview?"}</AlertDialogTitle>
@@ -507,10 +524,12 @@ function Lobby(props: {
             <VideoView stream={stream} />
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-3">
-              <Avatar className="size-20">
-                {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
-                <AvatarFallback className="text-xl">{initials(user.name)}</AvatarFallback>
-              </Avatar>
+              <AvatarWave size={80} halo={2}>
+                <Avatar className="size-20">
+                  {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
+                  <AvatarFallback className="text-xl">{initials(user.name)}</AvatarFallback>
+                </Avatar>
+              </AvatarWave>
               <p className="text-sm text-muted-foreground">
                 {camError === "denied" ? "Camera access is blocked" : camOn ? "Starting camera" : "Camera is off"}
               </p>
@@ -523,10 +542,10 @@ function Lobby(props: {
               ))}
             </div>
             <div className="flex gap-2">
-              <Button size="icon" aria-label={micOn ? "Turn microphone off" : "Turn microphone on"} aria-pressed={micOn} onClick={props.onToggleMic} className={cn("rounded-full", micOn ? "bg-white/90 text-black hover:bg-white" : "bg-destructive text-white hover:bg-destructive/90")}>
+              <Button size="icon" aria-label={micOn ? "Turn microphone off" : "Turn microphone on"} aria-pressed={micOn} onClick={props.onToggleMic} className={cn("rounded-full transition-transform hover:scale-110", micOn ? "bg-white/90 text-black hover:bg-white" : "bg-destructive text-white hover:bg-destructive/90")}>
                 {micOn ? <Mic /> : <MicOff />}
               </Button>
-              <Button size="icon" aria-label={camOn ? "Turn camera off" : "Turn camera on"} aria-pressed={camOn} onClick={props.onToggleCam} className={cn("rounded-full", camOn ? "bg-white/90 text-black hover:bg-white" : "bg-destructive text-white hover:bg-destructive/90")}>
+              <Button size="icon" aria-label={camOn ? "Turn camera off" : "Turn camera on"} aria-pressed={camOn} onClick={props.onToggleCam} className={cn("rounded-full transition-transform hover:scale-110", camOn ? "bg-white/90 text-black hover:bg-white" : "bg-destructive text-white hover:bg-destructive/90")}>
                 {camOn ? <Video /> : <VideoOff />}
               </Button>
             </div>
@@ -645,21 +664,9 @@ function ConnectionPill({ stage, online }: { stage: Stage; online: boolean }) {
 
 function DockButton({ label, active, pressed, onClick, children }: { label: string; active: boolean; pressed?: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          size="icon"
-          aria-label={label}
-          aria-pressed={active}
-          onClick={onClick}
-          variant={active ? "secondary" : pressed ? "ghost" : "destructive"}
-          className={cn(!active && !pressed && "bg-destructive-soft text-destructive hover:bg-destructive-soft/80")}
-        >
-          {children}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
+    <button className="dock-btn" aria-label={label} data-tip={label} aria-pressed={active} data-off={!active && !pressed ? "true" : undefined} data-toggle={pressed ? "true" : undefined} onClick={onClick}>
+      {children}
+    </button>
   );
 }
 
@@ -724,7 +731,9 @@ function Analyzing({ creating }: { creating: boolean }) {
   }, [steps.length]);
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center" aria-live="polite">
-      <Orb state="thinking" size={190} />
+      <div className="h-40 w-full max-w-2xl [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+        <VoiceRibbon strands={6} amplitude={0.3} speed={1.6} pointer={false} />
+      </div>
       <h1 className="mt-8 text-2xl font-semibold tracking-[-0.02em]">{creating ? "Building your interview" : "Analyzing your interview"}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{creating ? "Taking you to your dashboard in a moment." : "This usually takes 15 to 30 seconds."}</p>
       <ol className="mt-8 flex w-full max-w-xs flex-col gap-3 text-left">

@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
  */
 export default function VoiceRibbon({
   getLevel,
+  getPitch,
   className,
   strands = 5,
   amplitude = 0.22,
@@ -18,6 +19,8 @@ export default function VoiceRibbon({
   pointer = true,
 }: {
   getLevel?: () => number;
+  /** 0 (low voice) to 1 (high voice): higher pitch packs the waves tighter and quicker. */
+  getPitch?: () => number;
   className?: string;
   strands?: number;
   amplitude?: number;
@@ -27,12 +30,14 @@ export default function VoiceRibbon({
   const ref = useRef<HTMLCanvasElement>(null);
   const levelFn = useRef(getLevel);
   levelFn.current = getLevel;
+  const pitchFn = useRef(getPitch);
+  pitchFn.current = getPitch;
 
   useEffect(() => {
     const canvas = ref.current!;
     const ctx = canvas.getContext("2d")!;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let w = 0, h = 0, dpr = 1, raf = 0, visible = true, t = 0, level = 0;
+    let w = 0, h = 0, dpr = 1, raf = 0, visible = true, t = 0, level = 0, pitch = 0.45;
     let px = 0.5, py = 0.5, tx = 0.5, ty = 0.5;
     let colors = ["#3fd0f5", "#4f6ef7", "#9a6bff"];
 
@@ -54,6 +59,11 @@ export default function VoiceRibbon({
       ctx.clearRect(0, 0, w, h);
       const target = levelFn.current ? Math.min(1, Math.max(0, levelFn.current())) : 0.18 + 0.1 * Math.sin(t * 0.7);
       level += (target - level) * 0.18;
+      const pTarget = pitchFn.current ? Math.min(1, Math.max(0, pitchFn.current())) : 0.45;
+      pitch += (pTarget - pitch) * 0.08;
+      const pitchFreq = 0.7 + pitch * 1.1;
+      // Small canvases (avatar halos) get thinner lines and less glow.
+      const scale = Math.min(1, Math.max(0.45, h / 120));
       px += (tx - px) * 0.05;
       py += (ty - py) * 0.05;
       const grad = ctx.createLinearGradient(0, 0, w, 0);
@@ -70,8 +80,8 @@ export default function VoiceRibbon({
       for (let s = 0; s < strands; s++) {
         const k = s / Math.max(1, strands - 1);
         const amp = h * amplitude * (0.35 + level * 1.4) * (1 - Math.abs(k - 0.5) * 0.9);
-        const freq = 1.4 + k * 1.1;
-        const phase = t * (0.9 + k * 0.6) * speed + s * 1.7;
+        const freq = (1.4 + k * 1.1) * pitchFreq;
+        const phase = t * (0.9 + k * 0.6) * speed * (0.85 + pitch * 0.5) + s * 1.7;
         ctx.beginPath();
         for (let x = 0; x <= w; x += 4) {
           const u = x / w;
@@ -82,10 +92,10 @@ export default function VoiceRibbon({
           else ctx.lineTo(x, y);
         }
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.2 + (1 - Math.abs(k - 0.5) * 2) * 2.2;
+        ctx.lineWidth = (1.2 + (1 - Math.abs(k - 0.5) * 2) * 2.2) * scale;
         ctx.globalAlpha = 0.35 + (1 - Math.abs(k - 0.5) * 2) * 0.5;
         ctx.shadowColor = colors[1].startsWith("oklch") || colors[1].startsWith("#") ? colors[1] : "#4f6ef7";
-        ctx.shadowBlur = 18;
+        ctx.shadowBlur = 18 * scale;
         ctx.stroke();
       }
       ctx.globalAlpha = 1;

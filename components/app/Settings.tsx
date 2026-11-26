@@ -13,6 +13,7 @@ import { LEVELS, ROLES } from "@/lib/options";
 import { Field } from "@/components/AuthForm";
 import Chip from "@/components/app/Chip";
 import ThemeToggle from "@/components/ThemeToggle";
+import AvatarWave from "@/components/brand/AvatarWave";
 import { useDevices } from "@/components/call/useMedia";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -129,11 +130,13 @@ function Profile({ user }: { user: User }) {
         </Button>
       }
     >
-      <div className="flex items-center gap-5">
-        <Avatar className="size-20 text-xl">
-          {photo && <AvatarImage src={photo} alt="" />}
-          <AvatarFallback className="text-xl">{initials(name)}</AvatarFallback>
-        </Avatar>
+      <div className="flex items-center gap-8 pl-2">
+        <AvatarWave size={80} halo={1.9}>
+          <Avatar className="size-20 text-xl">
+            {photo && <AvatarImage src={photo} alt="" />}
+            <AvatarFallback className="text-xl">{initials(name)}</AvatarFallback>
+          </Avatar>
+        </AvatarWave>
         <div className="flex flex-wrap gap-2">
           <input ref={file} type="file" accept="image/*" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} aria-label="Upload photo" />
           <Button variant="outline" size="sm" onClick={() => file.current?.click()}>
