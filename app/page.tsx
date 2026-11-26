@@ -21,7 +21,7 @@ const FAQ = [
   { q: "What do I need?", a: "A browser with a microphone. Headphones help avoid echo. Your camera is optional and stays on your device; only audio is sent." },
   { q: "How is the score worked out?", a: "After the call, the full transcript is reviewed against five skills: communication, technical knowledge, problem solving, role fit and confidence. Each gets a score out of 100 and a written comment." },
   { q: "Which roles and stacks work?", a: "Any role you can describe. Choose a level, a focus (technical, behavioral or mixed) and up to eight technologies, and the questions are written for that mix." },
-  { q: "Who can see my reports?", a: "Only you. If you share a join code, the other person takes the same questions and gets their own private report." },
+  { q: "Who can see my reports?", a: "Only you. Reports and transcripts are private to your account." },
 ];
 
 export default async function Landing() {

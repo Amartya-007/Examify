@@ -133,5 +133,9 @@ export default function VoiceRibbon({
     };
   }, [strands, amplitude, speed, pointer]);
 
-  return <canvas ref={ref} aria-hidden="true" className={cn("pointer-events-none block size-full", className)} />;
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none relative size-full min-w-0 overflow-hidden", className)}>
+      <canvas ref={ref} className="absolute inset-0 block size-full" />
+    </div>
+  );
 }

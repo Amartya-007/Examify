@@ -560,7 +560,7 @@ function Lobby(props: {
         </div>
         <div className="rounded-2xl border bg-card p-4">{props.deviceControls}</div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Button size="xl" variant="brand" className="flex-1" onClick={props.onJoin} disabled={denied}>
+          <Button size="xl" variant="brand" className="sm:flex-1" onClick={props.onJoin} disabled={denied}>
             {mode === "generate" ? "Start setup call" : "Join interview"}
           </Button>
           <Button size="xl" variant="outline" onClick={() => playTestSound(props.speakerId)}>

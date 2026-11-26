@@ -1,17 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Hash } from "lucide-react";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import { getFeedbacksByUserId, getInterviewsByUserId, getLatestInterviews } from "@/lib/actions/general.action";
 import { computeStats } from "@/lib/stats";
 import PageHeader from "@/components/app/PageHeader";
-import NextUp, { type NextUpData } from "@/components/app/dashboard/NextUp";
+import StartPanel from "@/components/app/dashboard/StartPanel";
 import Progress from "@/components/app/dashboard/Progress";
 import SkillMap from "@/components/app/dashboard/SkillMap";
 import InterviewCard from "@/components/app/InterviewCard";
 import InterviewList from "@/components/app/InterviewList";
-import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Home" };
 
@@ -45,25 +43,7 @@ export default async function Dashboard() {
   }));
   const skills = [...totals].map(([name, { sum, n }]) => ({ name, score: Math.round(sum / n) }));
 
-  // What to practise next: an untaken interview first, otherwise retake the latest one.
   const untaken = interviews.find((i) => !taken.has(i.id));
-  const latest = feedbacks[0];
-  const latestInterview = latest && interviews.find((i) => i.id === latest.interviewId);
-  const next: NextUpData = untaken
-    ? { kind: "new", interview: untaken }
-    : latestInterview
-      ? {
-          kind: "retake",
-          interview: latestInterview,
-          last: latest.totalScore,
-          weakest: [...latest.categoryScores].sort((a, b) => a.score - b.score)[0],
-        }
-      : { kind: "empty" };
-  // If an untaken one exists but there is a recent weak spot, prefer the retake when it's very fresh.
-  const nextUp: NextUpData =
-    latestInterview && untaken && Date.now() - new Date(latest.createdAt).getTime() < 2 * 864e5
-      ? { kind: "retake", interview: latestInterview, last: latest.totalScore, weakest: [...latest.categoryScores].sort((a, b) => a.score - b.score)[0] }
-      : next;
 
   const chronological = [...feedbacks].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((f) => ({ score: f.totalScore, date: f.createdAt }));
 
@@ -72,29 +52,28 @@ export default async function Dashboard() {
       <PageHeader
         title={`${greeting()}, ${user.name.split(" ")[0]}`}
         description={user.targetRole ? `Preparing for ${user.targetRole} roles.` : "Here's where you left off."}
-        actions={
-          <Button asChild variant="outline">
-            <Link href="/join">
-              <Hash /> Join with code
-            </Link>
-          </Button>
-        }
       />
 
-      <div className="grid gap-5 lg:grid-cols-12">
-        <div className="lg:col-span-8">
-          <NextUp data={nextUp} />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <div className="min-w-0 lg:col-span-8">
+          <StartPanel
+            userId={user.id}
+            role={user.targetRole}
+            level={user.level}
+            stack={user.techstack}
+            untaken={untaken ? { id: untaken.id, role: untaken.role, questions: untaken.questions.length } : null}
+          />
         </div>
-        <div className="lg:col-span-4">
+        <div className="min-w-0 lg:col-span-4">
           <Progress scores={chronological} average={stats.average} completed={stats.completed} streak={stats.streak} />
         </div>
 
-        <section aria-labelledby="mine" className="rounded-[28px] border bg-card p-5 sm:p-6 lg:col-span-8">
+        <section aria-labelledby="mine" className="min-w-0 rounded-[28px] border bg-card p-5 sm:p-6 lg:col-span-8">
           <div className="mb-4 flex items-baseline justify-between">
             <h2 id="mine" className="text-xl font-semibold tracking-[-0.02em]">
-              Your interviews
+              Your interviews and reports
             </h2>
-            <Link href="/interview" className="text-sm font-medium text-brand-strong hover:underline">
+            <Link href="/interview" className="-my-2 inline-flex min-h-10 items-center text-sm font-medium text-brand-strong hover:underline">
               Create new
             </Link>
           </div>
@@ -105,7 +84,7 @@ export default async function Dashboard() {
           )}
         </section>
 
-        <div className="flex flex-col gap-5 lg:col-span-4">
+        <div className="flex min-w-0 flex-col gap-5 lg:col-span-4">
           <SkillMap skills={skills} />
         </div>
       </div>

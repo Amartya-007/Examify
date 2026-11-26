@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-import { getInterviewsByUserId } from "@/lib/actions/general.action";
 import CreateInterview from "@/components/app/CreateInterview";
 
 export const metadata = { title: "New interview" };
@@ -9,7 +8,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
   const sp = await searchParams;
-  const mine = (await getInterviewsByUserId(user.id)) || [];
   return (
     <CreateInterview
       userId={user.id}
@@ -18,8 +16,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         level: sp.level || user.level || "Junior",
         stack: sp.stack ? sp.stack.split(",").filter(Boolean) : user.techstack || [],
       }}
-      mode={sp.mode === "room" ? "room" : "form"}
-      shareable={mine.map((i) => ({ id: i.id, role: i.role, level: i.level, count: i.questions?.length || 0 }))}
     />
   );
 }

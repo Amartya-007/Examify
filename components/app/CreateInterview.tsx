@@ -1,32 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowRight, Check, Copy, FileText, Loader2, Mic, Plus, Users } from "lucide-react";
+import { ArrowRight, FileText, Loader2, Mic, Plus } from "lucide-react";
 
 import { createInterview } from "@/lib/actions/general.action";
 import { LEVELS, ROLES, STACK, TYPES } from "@/lib/options";
 import { cn } from "@/lib/utils";
 import Chip from "@/components/app/Chip";
 import { Field } from "@/components/AuthForm";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-type Mode = "form" | "voice" | "room";
+type Mode = "form" | "voice";
 const COUNTS = [3, 5, 7, 10];
 
-export default function CreateInterview({ userId, initial, mode: initialMode, shareable }: {
-  userId: string;
-  initial: { role: string; level: string; stack: string[] };
-  mode: "form" | "room";
-  shareable: { id: string; role: string; level: string; count: number }[];
-}) {
+export default function CreateInterview({ userId, initial }: { userId: string; initial: { role: string; level: string; stack: string[] } }) {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const [mode, setMode] = useState<Mode>("form");
   const [role, setRole] = useState(initial.role);
   const [level, setLevel] = useState(initial.level);
   const [type, setType] = useState<string>("Mixed");
@@ -55,7 +47,6 @@ export default function CreateInterview({ userId, initial, mode: initialMode, sh
   const modes: { id: Mode; title: string; body: string; icon: typeof FileText }[] = [
     { id: "form", title: "Build with a form", body: "Choose role, level and stack. Ready in seconds.", icon: FileText },
     { id: "voice", title: "Set up by voice", body: "Describe what you need in a short call.", icon: Mic },
-    { id: "room", title: "Practice room", body: "Share a code so a friend takes the same interview.", icon: Users },
   ];
 
   return (
@@ -63,7 +54,7 @@ export default function CreateInterview({ userId, initial, mode: initialMode, sh
       <h1 className="type-page">New interview</h1>
       <p className="mt-1.5 text-[15px] text-muted-foreground">Questions are written for your role and stack, then read aloud by your AI interviewer.</p>
 
-      <div role="radiogroup" aria-label="How do you want to set it up?" className="mt-8 grid gap-3 sm:grid-cols-3">
+      <div role="radiogroup" aria-label="How do you want to set it up?" className="mt-8 grid gap-3 sm:grid-cols-2">
         {modes.map((m) => (
           <button
             key={m.id}
@@ -204,70 +195,6 @@ export default function CreateInterview({ userId, initial, mode: initialMode, sh
         </form>
       )}
 
-      {mode === "room" && <ShareRoom items={shareable} />}
-    </div>
-  );
-}
-
-function ShareRoom({ items }: { items: { id: string; role: string; level: string; count: number }[] }) {
-  const [id, setId] = useState(items[0]?.id || "");
-  const [copied, setCopied] = useState<"code" | "link" | null>(null);
-  const link = typeof window !== "undefined" ? `${window.location.origin}/interview/${id}` : `/interview/${id}`;
-  const copy = async (what: "code" | "link") => {
-    await navigator.clipboard.writeText(what === "code" ? id : link).catch(() => {});
-    setCopied(what);
-    setTimeout(() => setCopied(null), 1500);
-  };
-
-  if (!items.length)
-    return (
-      <div className="mt-6 rounded-[28px] border border-dashed p-10 text-center">
-        <p className="font-medium">Create an interview first</p>
-        <p className="mt-1 text-sm text-muted-foreground">Every interview gets a code you can share.</p>
-      </div>
-    );
-
-  return (
-    <div className="mt-6 grid gap-6 rounded-[28px] border bg-card p-5 sm:p-8 md:grid-cols-[1fr_1fr]">
-      <div>
-        <h2 className="text-lg font-semibold">Share a practice room</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Anyone with the code takes the same questions with their own interviewer, and gets their own private report.
-        </p>
-        <label className="mt-6 grid gap-1.5 text-sm font-medium">
-          Interview
-          <Select value={id} onValueChange={setId}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {items.map((i) => (
-                <SelectItem key={i.id} value={i.id}>
-                  {i.role} · {i.level} · {i.count} questions
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </label>
-        <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="outline">Coming later</Badge> Live rooms with several people on one call.
-        </p>
-      </div>
-      <div className="flex flex-col justify-center gap-3 rounded-2xl bg-surface p-5">
-        <p className="text-xs font-medium text-muted-foreground">Join code</p>
-        <div className="flex items-center justify-between gap-3">
-          <code className="num truncate text-2xl font-semibold tracking-wider">{id}</code>
-          <Button size="sm" variant="outline" onClick={() => copy("code")}>
-            {copied === "code" ? <Check /> : <Copy />} {copied === "code" ? "Copied" : "Copy"}
-          </Button>
-        </div>
-        <Button variant="secondary" onClick={() => copy("link")}>
-          {copied === "link" ? <Check /> : <Copy />} {copied === "link" ? "Link copied" : "Copy invite link"}
-        </Button>
-        <Button asChild variant="ghost">
-          <Link href={`/interview/${id}`}>Open the green room</Link>
-        </Button>
-      </div>
     </div>
   );
 }

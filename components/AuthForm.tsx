@@ -141,7 +141,7 @@ export default function AuthForm({ type }: { type: FormType }) {
           hint={!isSignIn ? "At least 8 characters, with a number or symbol." : undefined}
           action={
             isSignIn ? (
-              <Link href="/forgot-password" className="text-xs font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">
+              <Link href="/forgot-password" className="-my-2 inline-flex min-h-10 items-center text-xs font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">
                 Forgot password?
               </Link>
             ) : null

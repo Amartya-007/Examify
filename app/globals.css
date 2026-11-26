@@ -240,28 +240,28 @@
   50% { background-position: 100% 50%; }
 }
 
-/* Session cards: faint blue tint inside, slowly drifting gradient edge. */
+/* Session cards: faint blue tint inside, a soft gradient edge that drifts very slowly. */
 @utility card-magic {
   border: 1px solid transparent;
   background:
     linear-gradient(
         155deg,
-        color-mix(in oklab, var(--magic-1) 14%, var(--card)),
-        color-mix(in oklab, var(--magic-2) 7%, var(--card)) 45%,
-        color-mix(in oklab, var(--magic-3) 16%, var(--card))
+        color-mix(in oklab, var(--magic-1) 12%, var(--card)),
+        color-mix(in oklab, var(--magic-2) 6%, var(--card)) 45%,
+        color-mix(in oklab, var(--magic-3) 13%, var(--card))
       )
       padding-box,
     linear-gradient(
         120deg,
-        var(--magic-1),
-        color-mix(in oklab, var(--magic-2) 35%, transparent) 35%,
-        var(--magic-3) 70%,
-        var(--magic-1)
+        color-mix(in oklab, var(--magic-1) 75%, var(--border)),
+        color-mix(in oklab, var(--magic-2) 60%, var(--border)) 50%,
+        color-mix(in oklab, var(--magic-3) 75%, var(--border)),
+        color-mix(in oklab, var(--magic-1) 75%, var(--border))
       )
       border-box;
-  background-size: 100% 100%, 300% 300%;
-  animation: card-drift 9s ease-in-out infinite;
-  box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--magic-2) 70%, transparent);
+  background-size: 100% 100%, 200% 200%;
+  animation: card-drift 24s ease-in-out infinite;
+  box-shadow: 0 18px 40px -30px color-mix(in oklab, var(--magic-2) 60%, transparent);
 }
 @keyframes card-drift {
   0%, 100% { background-position: 0 0, 0% 50%; }

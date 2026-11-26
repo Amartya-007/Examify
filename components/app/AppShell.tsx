@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronsUpDown, Hash, Home, LogOut, Mic, Plus, Search, Settings, UserRound } from "lucide-react";
+import { ChevronsUpDown, Home, LogOut, Mic, Plus, Search, Settings, UserRound } from "lucide-react";
 import { signOut as firebaseSignOut } from "firebase/auth";
 
 import { auth } from "@/firebase/client";
@@ -30,7 +30,6 @@ const NAV = [
   { href: "/dashboard", label: "Home", icon: Home },
   { href: "/interview", label: "New interview", icon: Plus, exact: true },
   { href: "/interview/voice", label: "Voice setup", icon: Mic },
-  { href: "/join", label: "Join a room", icon: Hash },
 ];
 
 export default function AppShell({ user, reports, interviews, children }: { user: ShellUser; reports: Report[]; interviews: PaletteInterview[]; children: React.ReactNode }) {
@@ -193,14 +192,14 @@ export default function AppShell({ user, reports, interviews, children }: { user
 
       {/* Mobile tab bar */}
       <nav aria-label="Main" className="no-print fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        {[NAV[0], NAV[1], NAV[3], { href: "/settings", label: "Settings", icon: Settings }].map((n) => {
+        {[NAV[0], NAV[1], NAV[2], { href: "/settings", label: "Settings", icon: Settings }].map((n) => {
           const active = isActive(n.href, "exact" in n ? n.exact : false);
           return (
             <Link key={n.href} href={n.href} aria-current={active ? "page" : undefined} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-muted-foreground", active && "text-foreground")}>
               <span className={cn("grid h-7 w-12 place-items-center rounded-full", active && (n.href === "/interview" ? "bg-magic text-white" : "bg-accent"))}>
                 <n.icon className="size-[18px]" />
               </span>
-              {n.label === "New interview" ? "New" : n.label === "Join a room" ? "Join" : n.label}
+              {n.label === "New interview" ? "New" : n.label === "Voice setup" ? "Voice" : n.label}
             </Link>
           );
         })}

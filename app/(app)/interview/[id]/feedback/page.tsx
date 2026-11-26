@@ -49,7 +49,7 @@ export default async function Feedback({ params }: RouteParams) {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <Link href="/dashboard" className="no-print inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/dashboard" className="no-print -my-2 inline-flex min-h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Dashboard
       </Link>
 
@@ -83,13 +83,13 @@ export default async function Feedback({ params }: RouteParams) {
 
         <TabsContent value="overview" className="mt-6 flex flex-col gap-6">
           {/* Verdict: score, judgement in a sentence, and the one next action */}
-          <section className="card-magic grid gap-8 rounded-[28px] p-6 sm:p-8 lg:grid-cols-[auto_1fr_300px] lg:items-center">
+          <section className="card-magic grid gap-8 rounded-[28px] p-6 sm:p-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center 2xl:grid-cols-[auto_minmax(0,1fr)_300px]">
             <ScoreGauge score={feedback.totalScore} size={240} className="mx-auto" />
             <div>
               <h2 className="type-page">{scoreLabel(feedback.totalScore)}</h2>
               <p className="mt-3 text-[16px] leading-relaxed text-pretty">{feedback.finalAssessment}</p>
             </div>
-            <div className="rounded-2xl bg-surface p-5">
+            <div className="rounded-2xl bg-surface p-5 md:col-span-2 2xl:col-span-1">
               <p className="text-sm font-medium">Work on next</p>
               <p className="mt-2 flex items-baseline justify-between gap-3">
                 <span className="text-lg font-semibold">{shortCategory(weakest.name)}</span>

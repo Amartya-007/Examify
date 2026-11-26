@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Command } from "cmdk";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { FileText, Hash, LayoutGrid, Mic, MoonStar, Plus, Search, Settings, SunMedium } from "lucide-react";
+import { FileText, LayoutGrid, Mic, MoonStar, Plus, Search, Settings, SunMedium } from "lucide-react";
 
 export type PaletteInterview = { id: string; role: string; level: string; scored: boolean };
 
@@ -58,9 +58,6 @@ export default function CommandMenu({ open, onOpenChange, interviews }: { open: 
                 </Command.Item>
                 <Command.Item className={item} onSelect={() => run(() => router.push("/interview/voice"))}>
                   <Mic /> Set up an interview by voice
-                </Command.Item>
-                <Command.Item className={item} onSelect={() => run(() => router.push("/join"))}>
-                  <Hash /> Join with a code
                 </Command.Item>
               </Command.Group>
               {interviews.length > 0 && (

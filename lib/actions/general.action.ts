@@ -210,12 +210,3 @@ function parseQuestions(text: string, amount: number): string[] {
     return text.split("\n").map((l) => l.replace(/^[-\d.)\s"]+|[",\s]+$/g, "")).filter((l) => l.length > 8).slice(0, amount);
   }
 }
-
-/** Resolves a join code or pasted link to an interview id, or null. */
-export async function resolveJoinCode(input: string): Promise<{ id: string; role: string } | null> {
-  const raw = (input || "").trim();
-  const id = (raw.match(/interview\/([A-Za-z0-9_-]{2,64})/)?.[1] || raw).replace(/[^A-Za-z0-9_-]/g, "");
-  if (!id) return null;
-  const interview = await getInterviewById(id);
-  return interview && interview.finalized !== false ? { id: interview.id, role: interview.role } : null;
-}
