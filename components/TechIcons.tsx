@@ -14,7 +14,7 @@ function Icon({ tech, size }: { tech: string; size: number }) {
       <TooltipTrigger asChild>
         <span
           tabIndex={0}
-          className="grid place-items-center rounded-full border bg-card ring-2 ring-card transition-transform outline-none hover:z-10 hover:-translate-y-0.5 focus-visible:ring-ring"
+          className="grid place-items-center rounded-full border bg-card ring-2 ring-card transition-[scale] outline-none hover:z-10 hover:scale-110 focus-visible:ring-ring"
           style={{ width: size, height: size }}
         >
           {failed ? (

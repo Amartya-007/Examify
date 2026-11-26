@@ -23,7 +23,7 @@ export default function HeroVoice() {
           onClick={() => setOn((v) => !v)}
           aria-pressed={active}
           className={cn(
-            "glass flex h-11 cursor-pointer items-center gap-2.5 rounded-full px-4 text-sm font-medium transition hover:-translate-y-0.5 hover:brightness-110 focus-visible:ring-[3px] focus-visible:ring-ring",
+            "glass flex h-11 cursor-pointer items-center gap-2.5 rounded-full px-4 text-sm font-medium transition hover:scale-105 hover:brightness-110 focus-visible:ring-[3px] focus-visible:ring-ring",
             active && "ring-1 ring-[var(--magic-1)]",
           )}
         >
