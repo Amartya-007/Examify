@@ -43,7 +43,7 @@ export default function AppShell({ user, reports, interviews, children }: { user
   const handleSignOut = async () => {
     await firebaseSignOut(auth).catch(() => {});
     await signOut();
-    router.push("/sign-in");
+    router.push("/");
     router.refresh();
   };
 

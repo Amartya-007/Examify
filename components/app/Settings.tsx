@@ -311,7 +311,7 @@ function Security({ email }: { email: string }) {
   const handleSignOut = async () => {
     await firebaseSignOut(auth).catch(() => {});
     await signOut();
-    router.push("/sign-in");
+    router.push("/");
     router.refresh();
   };
 
