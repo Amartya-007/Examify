@@ -28,7 +28,6 @@ import { readPrefs, writePrefs } from "@/lib/prefs";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand/Logo";
 import Orb from "@/components/call/Orb";
-import VoiceRibbon from "@/components/brand/VoiceRibbon";
 import { playTestSound, useCamera, useDevices, useMicLevel, useTimer } from "@/components/call/useMedia";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -354,10 +353,7 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
           <main className="relative flex min-w-0 flex-1 flex-col p-3 sm:p-5">
             {/* Stage: the interviewer is the room */}
             <section className="bg-night relative flex min-h-[420px] flex-1 flex-col items-center justify-center overflow-hidden rounded-[28px] border bg-surface" aria-label="AI interviewer">
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-56 -translate-y-1/2 opacity-80 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
-                <VoiceRibbon strands={6} amplitude={0.34} pointer={false} getLevel={() => levelRef.current} />
-              </div>
-              <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={200} />
+              <Orb ref={orbRef} state={stage === "connecting" ? "connecting" : aiSpeaking ? "speaking" : "listening"} size={240} />
               <p className="glass relative mt-8 rounded-full px-3.5 py-1.5 text-sm font-medium" aria-live="polite">
                 {stage === "connecting" ? "Connecting to your interviewer" : aiSpeaking ? "Interviewer is speaking" : "Your turn. Take your time."}
               </p>
@@ -728,7 +724,7 @@ function Analyzing({ creating }: { creating: boolean }) {
   }, [steps.length]);
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center" aria-live="polite">
-      <Orb state="thinking" size={140} />
+      <Orb state="thinking" size={190} />
       <h1 className="mt-8 text-2xl font-semibold tracking-[-0.02em]">{creating ? "Building your interview" : "Analyzing your interview"}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{creating ? "Taking you to your dashboard in a moment." : "This usually takes 15 to 30 seconds."}</p>
       <ol className="mt-8 flex w-full max-w-xs flex-col gap-3 text-left">

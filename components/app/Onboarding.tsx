@@ -1,20 +1,19 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, Camera, Check, Loader2, Mic, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, Plus } from "lucide-react";
 
 import { updateUserProfile } from "@/lib/actions/auth.action";
 import { GOALS, LEVELS, ROLES, STACK } from "@/lib/options";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
 import Chip from "@/components/app/Chip";
-import { useCamera, useMicLevel } from "@/components/call/useMedia";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const STEPS = ["Your goal", "Role and stack", "Device check"];
+const STEPS = ["Your goal", "Role and stack"];
 
 export default function Onboarding({ name, initial }: { name: string; initial: { role?: string; level?: string; techstack?: string[] } }) {
   const router = useRouter();
@@ -31,6 +30,8 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
   const finalRole = (role === "__custom" ? customRole : role).trim();
 
   const save = async (dest: "dashboard" | "interview", skip = false) => {
+    if (!skip && !finalRole) return setRoleError("Pick a role or type your own.");
+    setRoleError("");
     setSaving(true);
     const res = await updateUserProfile(
       skip ? { onboarded: true } : { targetRole: finalRole || undefined, level, techstack: stack, onboarded: true },
@@ -47,7 +48,7 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
   const next = () => {
     if (step === 1 && !finalRole) return setRoleError("Pick a role or type your own.");
     setRoleError("");
-    setStep((s) => Math.min(2, s + 1));
+    setStep((s) => Math.min(STEPS.length - 1, s + 1));
   };
 
   const toggleTech = (t: string) => setStack((s) => (s.includes(t) ? s.filter((x) => x !== t) : s.length >= 8 ? s : [...s, t]));
@@ -165,14 +166,13 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
             </>
           )}
 
-          {step === 2 && <DeviceCheck />}
         </section>
 
         <div className="mt-10 flex items-center justify-between gap-3 border-t pt-6">
           <Button variant="ghost" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} className={cn(step === 0 && "invisible")}>
             <ArrowLeft /> Back
           </Button>
-          {step < 2 ? (
+          {step < STEPS.length - 1 ? (
             <Button size="lg" onClick={next}>
               Continue <ArrowRight />
             </Button>
@@ -189,64 +189,5 @@ export default function Onboarding({ name, initial }: { name: string; initial: {
         </div>
       </main>
     </div>
-  );
-}
-
-function DeviceCheck() {
-  const [enabled, setEnabled] = useState(false);
-  const meter = useRef<HTMLDivElement>(null);
-  const mic = useMicLevel(enabled, undefined, (v) => {
-    const bars = meter.current?.children;
-    if (!bars) return;
-    for (let i = 0; i < bars.length; i++) (bars[i] as HTMLElement).dataset.on = String(v > (i + 0.5) / bars.length);
-  });
-  const cam = useCamera(enabled, undefined);
-  const video = useRef<HTMLVideoElement>(null);
-  if (video.current && cam.stream && video.current.srcObject !== cam.stream) video.current.srcObject = cam.stream;
-
-  return (
-    <>
-      <h1 className="type-page">Quick device check</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">Interviews happen by voice. Your camera is optional and never leaves your device.</p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-[1.2fr_1fr]">
-        <div className="relative aspect-video overflow-hidden rounded-2xl border bg-surface">
-          {cam.stream ? (
-            <video ref={video} autoPlay muted playsInline className="size-full -scale-x-100 object-cover" />
-          ) : (
-            <div className="flex size-full flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Camera className="size-6" />
-              {cam.error === "denied" ? "Camera blocked. That's fine, it's optional." : enabled ? "Starting camera" : "Camera preview"}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col justify-between gap-4 rounded-2xl border bg-card p-5">
-          <div>
-            <p className="flex items-center gap-2 text-sm font-medium">
-              <Mic className="size-4" /> Microphone
-            </p>
-            <div ref={meter} className="mt-4 flex h-10 items-end gap-1" aria-hidden="true">
-              {Array.from({ length: 16 }).map((_, i) => (
-                <span key={i} className="flex-1 rounded-full bg-muted transition-colors [transition-duration:75ms] data-[on=true]:bg-brand" style={{ height: `${25 + ((i * 41) % 75)}%` }} />
-              ))}
-            </div>
-            <p className={cn("mt-3 text-sm", mic === "denied" ? "text-destructive" : "text-muted-foreground")} role="status">
-              {mic === "granted"
-                ? "Say something. The bars should move."
-                : mic === "denied"
-                  ? "Microphone blocked. Allow it from your browser's address bar."
-                  : mic === "unsupported"
-                    ? "No microphone found."
-                    : "We'll ask your browser for access."}
-            </p>
-          </div>
-          {!enabled && (
-            <Button onClick={() => setEnabled(true)}>
-              <Mic /> Allow microphone and camera
-            </Button>
-          )}
-        </div>
-      </div>
-      <p className="mt-4 text-sm text-muted-foreground">You can skip this and test your devices in the green room before each interview.</p>
-    </>
   );
 }
