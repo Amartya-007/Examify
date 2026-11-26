@@ -28,13 +28,14 @@ export function Logo({ href = "/", className, size = "md" }: { href?: string | n
   const inner = (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoMark className={size === "lg" ? "size-10" : size === "sm" ? "size-7" : "size-8"} title="" />
+      {/* The original script wordmark (Grand Hotel), with the flowing brand gradient. */}
       <span
         className={cn(
-          "text-magic font-semibold tracking-[-0.035em]",
-          size === "lg" ? "text-2xl" : size === "sm" ? "text-base" : "text-lg",
+          "font-wordmark text-magic-flow -mb-[0.08em] pr-[0.12em] pb-[0.08em] leading-[1.15] font-normal",
+          size === "lg" ? "text-[2.1rem]" : size === "sm" ? "text-[1.5rem]" : "text-[1.75rem]",
         )}
       >
-        examify
+        ExamiFy
       </span>
     </span>
   );

@@ -394,3 +394,20 @@
 .dock-btn[data-tip]:hover::after,
 .dock-btn[data-tip]:focus-visible::after { opacity: 1; translate: -50% 0; }
 @media (hover: none) { .dock-btn[data-tip]::after { display: none; } }
+
+/* Wordmark: the original Examify script, with the gradient flowing through the letters
+   (cyan, blue, violet) on the original 8-second loop. */
+@utility font-wordmark { font-family: "Grand Hotel", cursive; letter-spacing: 0.01em; }
+@utility text-magic-flow {
+  background-image: linear-gradient(270deg, var(--magic-1), var(--magic-2), var(--magic-3), var(--magic-1));
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: magic-flow 8s ease infinite;
+}
+@keyframes magic-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

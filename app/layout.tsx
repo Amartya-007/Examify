@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/bricolage-grotesque/standard.css";
 import "@fontsource-variable/instrument-sans";
+import "@fontsource/grand-hotel";
 import { GeistMono } from "geist/font/mono";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
