@@ -18,13 +18,13 @@ const Orb = forwardRef<HTMLDivElement, { state: "idle" | "connecting" | "listeni
         aria-hidden="true"
       >
         {/* halo rings scale with voice level */}
-        <span className="absolute inset-0 rounded-full bg-magic-2/12 transition-transform duration-150 ease-out [transform:scale(calc(1+var(--level)*0.45))]" />
-        <span className="absolute inset-[10%] rounded-full bg-magic-1/15 transition-transform duration-150 ease-out [transform:scale(calc(1+var(--level)*0.25))]" />
+        <span className="absolute inset-0 rounded-full bg-magic-2/12 transition-transform [transition-duration:150ms] ease-out [transform:scale(calc(1+var(--level)*0.45))]" />
+        <span className="absolute inset-[10%] rounded-full bg-magic-1/15 transition-transform [transition-duration:150ms] ease-out [transform:scale(calc(1+var(--level)*0.25))]" />
         <span
           className={cn(
             "relative size-[64%] rounded-full shadow-[inset_0_-10px_30px_rgba(0,0,0,.25),0_14px_44px_-8px_var(--magic-2)]",
             "bg-[radial-gradient(circle_at_30%_26%,oklch(0.95_0.06_210),var(--magic-1)_22%,var(--magic-2)_55%,var(--magic-3)_100%)]",
-            "transition-transform duration-150 ease-out [transform:scale(calc(1+var(--level)*0.12))]",
+            "transition-transform [transition-duration:150ms] ease-out [transform:scale(calc(1+var(--level)*0.12))]",
             "group-data-[state=connecting]/orb:animate-pulse group-data-[state=idle]/orb:animate-orb group-data-[state=listening]/orb:animate-orb group-data-[state=thinking]/orb:animate-orb",
           )}
         />

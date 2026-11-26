@@ -523,7 +523,7 @@ function Lobby(props: {
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/55 to-transparent p-3 sm:p-4">
             <div ref={props.meterRef} className="flex h-6 items-end gap-[3px]" aria-hidden="true">
               {Array.from({ length: 12 }).map((_, i) => (
-                <span key={i} className="w-1 rounded-full bg-white/35 transition-colors duration-75 data-[on=true]:bg-white" style={{ height: `${30 + ((i * 37) % 70)}%` }} />
+                <span key={i} className="w-1 rounded-full bg-white/35 transition-colors [transition-duration:75ms] data-[on=true]:bg-white" style={{ height: `${30 + ((i * 37) % 70)}%` }} />
               ))}
             </div>
             <div className="flex gap-2">

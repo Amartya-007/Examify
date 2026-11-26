@@ -19,7 +19,7 @@ export default function CategoryBars({ categories, showComments = true, classNam
               </span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={c.score} aria-valuemin={0} aria-valuemax={100} aria-label={shortCategory(c.name)}>
-              <div className={cn("h-full rounded-full transition-[width] duration-700", tone)} style={{ width: `${c.score}%` }} />
+              <div className={cn("h-full rounded-full transition-[width] [transition-duration:700ms]", tone)} style={{ width: `${c.score}%` }} />
             </div>
             {showComments && c.comment && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.comment}</p>}
           </li>

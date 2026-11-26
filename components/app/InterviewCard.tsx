@@ -30,7 +30,7 @@ export default function InterviewCard({ interview, feedback, community = false }
   const date = dayjs(feedback?.createdAt || createdAt);
 
   return (
-    <article className="card-magic group relative flex h-full flex-col rounded-[28px] p-5 transition-shadow duration-300 hover:shadow-[0_22px_50px_-26px_var(--magic-2)]">
+    <article className="card-magic group relative flex h-full flex-col rounded-[28px] p-5 transition-shadow [transition-duration:300ms] hover:shadow-[0_22px_50px_-26px_var(--magic-2)]">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-1.5">

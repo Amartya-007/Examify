@@ -261,6 +261,8 @@
       border-box;
   background-size: 100% 100%, 200% 200%;
   animation: card-drift 24s ease-in-out infinite;
+  /* Lock the pace: duration-* utilities from tailwindcss-animate would otherwise override it. */
+  animation-duration: 24s !important;
   box-shadow: 0 18px 40px -30px color-mix(in oklab, var(--magic-2) 60%, transparent);
 }
 @keyframes card-drift {

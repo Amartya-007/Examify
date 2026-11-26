@@ -18,7 +18,7 @@ export default function ScoreGauge({ score, size = 220, className }: { score: nu
           strokeLinecap="round"
           strokeDasharray={len}
           strokeDashoffset={len * (1 - s / 100)}
-          className="transition-[stroke-dashoffset] duration-1000 ease-out"
+          className="transition-[stroke-dashoffset] [transition-duration:1000ms] ease-out"
         />
       </svg>
       <div className="absolute inset-x-0 bottom-0 flex flex-col items-center">

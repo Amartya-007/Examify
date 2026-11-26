@@ -226,7 +226,7 @@ function DeviceCheck() {
             </p>
             <div ref={meter} className="mt-4 flex h-10 items-end gap-1" aria-hidden="true">
               {Array.from({ length: 16 }).map((_, i) => (
-                <span key={i} className="flex-1 rounded-full bg-muted transition-colors duration-75 data-[on=true]:bg-brand" style={{ height: `${25 + ((i * 41) % 75)}%` }} />
+                <span key={i} className="flex-1 rounded-full bg-muted transition-colors [transition-duration:75ms] data-[on=true]:bg-brand" style={{ height: `${25 + ((i * 41) % 75)}%` }} />
               ))}
             </div>
             <p className={cn("mt-3 text-sm", mic === "denied" ? "text-destructive" : "text-muted-foreground")} role="status">
