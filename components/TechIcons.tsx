@@ -44,7 +44,7 @@ export default function TechIcons({ techStack, max = 4, size = 30, className }: 
   if (!techStack?.length) return null;
   const extra = techStack.length - max;
   return (
-    <div className={cn("flex items-center -space-x-1.5", className)}>
+    <div className={cn("relative z-10 flex items-center -space-x-1.5", className)}>
       {techStack.slice(0, max).map((t) => (
         <Icon key={t} tech={t} size={size} />
       ))}
