@@ -23,4 +23,8 @@ function initFirebaseAdmin() {
   };
 }
 
-export const { auth, db } = initFirebaseAdmin();
+// Demo mode (local design review only) runs without credentials.
+const demo = process.env.NODE_ENV !== "production" && process.env.EXAMIFY_DEMO === "1";
+export const { auth, db } = demo
+  ? ({ auth: null, db: null } as unknown as ReturnType<typeof initFirebaseAdmin>)
+  : initFirebaseAdmin();
