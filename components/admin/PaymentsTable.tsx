@@ -149,7 +149,7 @@ export default function PaymentsTable() {
                   <tr key={p.id} className="transition-colors hover:bg-accent/50">
                     <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">{dayjs(p.createdAt).format("D MMM, h:mm A")}</td>
                     <td className="px-4 py-3">
-                      <Link href={`/admin/users?user=${p.userId}`} className="font-medium hover:underline">
+                      <Link href={`/admin/users?user=${p.userId}`} className="inline-flex min-h-6 items-center font-medium hover:underline">
                         {p.userName || p.userId}
                       </Link>
                       <span className="block max-w-[200px] truncate text-xs text-muted-foreground">{p.userEmail}</span>

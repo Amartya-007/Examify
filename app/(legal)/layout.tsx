@@ -17,7 +17,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       </header>
       <main id="main" className="mx-auto max-w-5xl px-5 py-12 sm:py-16">{children}</main>
       <footer className="border-t">
-        <nav aria-label="Legal" className="mx-auto flex max-w-5xl flex-wrap gap-x-5 gap-y-2 px-5 py-8 text-sm text-muted-foreground">
+        <nav aria-label="Legal" className="mx-auto flex max-w-5xl flex-wrap gap-x-3 gap-y-1 px-3 py-6 text-sm text-muted-foreground">
           {[
             ["/pricing", "Pricing"],
             ["/terms", "Terms"],
@@ -25,7 +25,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
             ["/refunds", "Refunds and cancellations"],
             ["/contact", "Contact"],
           ].map(([h, l]) => (
-            <Link key={h} href={h} className="hover:text-foreground">
+            <Link key={h} href={h} className="inline-flex min-h-11 items-center rounded-md px-2 hover:text-foreground">
               {l}
             </Link>
           ))}
