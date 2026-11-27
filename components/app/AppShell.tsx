@@ -181,14 +181,14 @@ export default function AppShell({ user, reports, interviews, children }: { user
       </aside>
 
       {/* Mobile top bar */}
-      <header className="no-print sticky top-0 z-40 flex h-14 items-center gap-1 border-b bg-background/85 px-3 backdrop-blur-md min-[360px]:gap-2 min-[360px]:px-4 md:hidden">
+      <header className="no-print sticky top-0 z-40 flex h-14 items-center gap-0.5 border-b bg-background/85 px-3 backdrop-blur-md min-[360px]:gap-2 min-[360px]:px-4 md:hidden">
         <Logo href="/dashboard" size="sm" />
         <CreditChip className="ml-auto" />
         <button onClick={() => palette.setOpen(true)} aria-label="Search" className="grid size-9 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:bg-accent">
           <Search className="size-[18px]" />
         </button>
         <ThemeToggle compact />
-        <Link href="/settings" aria-label="Account" className="grid size-10 shrink-0 place-items-center min-[360px]:ml-1">
+        <Link href="/settings" aria-label="Account" className="grid size-9 shrink-0 place-items-center min-[360px]:ml-1 min-[360px]:size-10">
           <AvatarWave size={30} halo={1.45}>
             <Avatar className="size-[30px]">
               {user.profileURL && <AvatarImage src={user.profileURL} alt="" />}
