@@ -17,6 +17,12 @@ export const demoUser: User = {
   level: "Junior",
   techstack: ["React", "TypeScript", "Next.js"],
   onboarded: true,
+  role: "admin",
+  credits: 14,
+  plan: "free",
+  planStatus: null,
+  planRenewsAt: null,
+  createdAt: new Date(Date.now() - 21 * 864e5).toISOString(),
 };
 
 export const demoInterviews: Interview[] = [

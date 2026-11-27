@@ -9,6 +9,7 @@ import VoiceRibbon from "@/components/brand/VoiceRibbon";
 import ThemeToggle from "@/components/ThemeToggle";
 import HeroVoice from "@/components/marketing/HeroVoice";
 import LandingDemo from "@/components/marketing/LandingDemo";
+import PricingSection from "@/components/marketing/PricingSection";
 import Radar from "@/components/report/Radar";
 import { ScoreRing } from "@/components/app/InterviewCard";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,8 @@ const FAQ = [
   { q: "How is the score worked out?", a: "After the call, the full transcript is reviewed against five skills: communication, technical knowledge, problem solving, role fit and confidence. Each gets a score out of 100 and a written comment." },
   { q: "Which roles and stacks work?", a: "Any role you can describe. Choose a level, a focus (technical, behavioral or mixed) and up to eight technologies, and the questions are written for that mix." },
   { q: "Who can see my reports?", a: "Only you. Reports and transcripts are private to your account." },
+  { q: "How do credits work?", a: "Each question costs 2 credits, so a 5-question interview uses 10. New accounts get 20 free credits. Packs never expire; Pro adds 600 credits every month." },
+  { q: "How do I pay, and can I cancel?", a: "Payments go through Razorpay: UPI, cards, netbanking and wallets. Cancel Pro any time from Billing; it stays active until the end of the period you paid for." },
 ];
 
 export default async function Landing() {
@@ -40,6 +43,7 @@ export default async function Landing() {
               ["#demo", "Sample session"],
               ["#how", "How it works"],
               ["#report", "Your report"],
+              ["#pricing", "Pricing"],
               ["#faq", "Questions"],
             ].map(([h, l]) => (
               <a key={h} href={h} className="rounded-lg px-3 py-2 transition hover:bg-accent hover:text-foreground">
@@ -179,6 +183,13 @@ export default async function Landing() {
           </div>
         </section>
 
+        {/* Pricing */}
+        <section id="pricing" className="scroll-mt-24 border-t px-5 py-24 sm:px-6 lg:py-28">
+          <div className="mx-auto max-w-6xl">
+            <PricingSection ctaHref={primary.href} />
+          </div>
+        </section>
+
         {/* FAQ */}
         <section id="faq" className="scroll-mt-24 border-t bg-surface/60 px-5 py-24 sm:px-6 lg:py-28">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
@@ -211,7 +222,13 @@ export default async function Landing() {
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Logo size="sm" />
-          <p>Practice smarter. Perform better.</p>
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link href="/pricing" className="hover:text-foreground">Pricing</Link>
+            <Link href="/terms" className="hover:text-foreground">Terms</Link>
+            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link href="/refunds" className="hover:text-foreground">Refunds</Link>
+            <Link href="/contact" className="hover:text-foreground">Contact</Link>
+          </nav>
           <a href="https://github.com/Amartya-007/Examify" className="inline-flex items-center gap-1 hover:text-foreground">
             Source on GitHub <ArrowUpRight className="size-3.5" />
           </a>

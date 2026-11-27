@@ -8,6 +8,7 @@ import { ChevronRight, Loader2, Mic, Play, SlidersHorizontal } from "lucide-reac
 
 import { createInterview } from "@/lib/actions/general.action";
 import VoiceRibbon from "@/components/brand/VoiceRibbon";
+import { useBilling } from "@/components/billing/BillingProvider";
 
 type Props = {
   userId: string;
@@ -21,9 +22,11 @@ type Props = {
 export default function StartPanel({ userId, role, level = "Junior", stack = [], untaken }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const billing = useBilling();
 
   const quickStart = async () => {
     if (!role) return router.push("/interview");
+    if (!(await billing.ensureCredits(5, "A 5-question interview"))) return;
     setBusy(true);
     const res = await createInterview({ userId, role, level, type: "Mixed", techstack: stack, amount: 5 });
     if (!res.success) {
@@ -60,7 +63,7 @@ export default function StartPanel({ userId, role, level = "Junior", stack = [],
                 {busy ? "Writing your questions" : role ? `${role} interview` : "Choose a role to begin"}
               </span>
               <span className="mt-1 block text-sm text-white/80">
-                {role ? `${level}, ${stack.length ? stack.slice(0, 3).join(", ") : "general"}. 5 questions, about 13 minutes.` : "Takes about 30 seconds to set up."}
+                {role ? `${level}, ${stack.length ? stack.slice(0, 3).join(", ") : "general"}. 5 questions, about 13 minutes, 10 credits.` : "Takes about 30 seconds to set up."}
               </span>
             </span>
           </button>

@@ -9,6 +9,8 @@ import { createInterview } from "@/lib/actions/general.action";
 import { LEVELS, ROLES, STACK, TYPES } from "@/lib/options";
 import { cn } from "@/lib/utils";
 import Chip from "@/components/app/Chip";
+import { useBilling } from "@/components/billing/BillingProvider";
+import { interviewCost } from "@/lib/billing/config";
 import { Field } from "@/components/AuthForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +29,7 @@ export default function CreateInterview({ userId, initial }: { userId: string; i
   const [amount, setAmount] = useState(5);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const billing = useBilling();
 
   const toggle = (t: string) => setStack((s) => (s.includes(t) ? s.filter((x) => x !== t) : s.length >= 8 ? s : [...s, t]));
 
@@ -179,7 +182,10 @@ export default function CreateInterview({ userId, initial }: { userId: string; i
           </fieldset>
 
           <div className="flex flex-col-reverse items-stretch gap-3 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-muted-foreground">Next: a quick device check, then the interview starts.</p>
+            <p className="text-sm text-muted-foreground">
+              Uses <span className="num font-medium text-foreground">{interviewCost(amount)}</span> credits when you start. You have{" "}
+              <span className={cn("num font-medium", billing.balance.credits < interviewCost(amount) ? "text-warning" : "text-foreground")}>{billing.balance.credits}</span>.
+            </p>
             <Button type="submit" size="lg" variant="brand" disabled={busy}>
               {busy ? (
                 <>

@@ -116,6 +116,8 @@ export async function getCurrentUser(): Promise<User | null> {
       .doc(decodedClaims.uid)
       .get();
     if (!userRecord.exists) return null;
+    // Suspended accounts (set from the admin dashboard) are treated as signed out.
+    if (userRecord.data()?.status === "suspended") return null;
 
     return {
       ...userRecord.data(),

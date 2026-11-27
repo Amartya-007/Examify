@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   Check,
+  Coins,
   Loader2,
   MessageSquareText,
   Mic,
@@ -23,6 +24,10 @@ import {
 
 import { interviewer } from "@/constants";
 import { vapi } from "@/lib/vapi.sdk";
+import { toast } from "sonner";
+import { consumeCredits, InsufficientCredits } from "@/lib/billing/client";
+import { interviewCost } from "@/lib/billing/config";
+import { useBilling } from "@/components/billing/BillingProvider";
 import { createFeedback } from "@/lib/actions/general.action";
 import { readPrefs, writePrefs } from "@/lib/prefs";
 import { cn } from "@/lib/utils";
@@ -70,6 +75,7 @@ const fmt = (ms: number) => {
 export default function CallRoom({ mode, user, interview, feedbackId, preview, previewLines }: CallRoomProps) {
   const router = useRouter();
   const prefs = useMemo(() => readPrefs(), []);
+  const billing = useBilling();
   const isPreview = !!preview;
 
   const [stage, setStage] = useState<Stage>(preview === "live" ? "live" : preview === "analyzing" ? "analyzing" : preview === "error" ? "error" : "lobby");
@@ -228,7 +234,29 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
     }
   }, [feedbackId, interview, router, user.id]);
 
+  const [charging, setCharging] = useState(false);
   const join = async () => {
+    // Interviews cost credits; the voice setup call is free.
+    if (mode === "interview" && interview) {
+      const questions = interview.questions?.length || 5;
+      setCharging(true);
+      try {
+        if (!(await billing.ensureCredits(questions, "This interview"))) return;
+        try {
+          billing.setBalance(await consumeCredits({ interviewId: interview.id, questions }));
+        } catch (e) {
+          if (e instanceof InsufficientCredits) {
+            if (!(await billing.openPaywall({ needed: e.needed, context: "This interview" }))) return;
+            billing.setBalance(await consumeCredits({ interviewId: interview.id, questions }));
+          } else {
+            toast.error("We couldn't reserve credits for this interview. Try again.");
+            return;
+          }
+        }
+      } finally {
+        setCharging(false);
+      }
+    }
     if (isPreview) return setStage("live");
     endedByUser.current = false;
     setLines([]);
@@ -353,6 +381,9 @@ export default function CallRoom({ mode, user, interview, feedbackId, preview, p
           onToggleCam={() => setCamOn((v) => !v)}
           onToggleMic={() => setMicOn((v) => !v)}
           onJoin={join}
+          charging={charging}
+          cost={mode === "interview" ? interviewCost(interview?.questions?.length || 5) : 0}
+          balance={billing.balance.credits}
           deviceControls={deviceControls}
           speakerId={speakerId}
         />
@@ -510,6 +541,9 @@ function Lobby(props: {
   onToggleCam: () => void;
   onToggleMic: () => void;
   onJoin: () => void;
+  charging: boolean;
+  cost: number;
+  balance: number;
   deviceControls: React.ReactNode;
   speakerId?: string;
 }) {
@@ -574,9 +608,25 @@ function Lobby(props: {
           </p>
         </div>
         <div className="rounded-2xl border bg-card p-4">{props.deviceControls}</div>
+        {props.cost > 0 && (
+          <div className={cn("flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm", props.balance < props.cost ? "border-[color-mix(in_oklab,var(--warning)_45%,var(--border))] bg-warning-soft" : "bg-card")}>
+            <span className="flex items-center gap-2">
+              <Coins className={cn("size-4", props.balance < props.cost ? "text-warning" : "text-brand-strong")} />
+              Uses <span className="num font-semibold">{props.cost}</span> credits
+            </span>
+            <span className="text-muted-foreground">
+              {props.balance < props.cost ? (
+                <>You have <span className="num font-medium text-foreground">{props.balance}</span>. Top up to start.</>
+              ) : (
+                <>You have <span className="num font-medium text-foreground">{props.balance}</span></>
+              )}
+            </span>
+          </div>
+        )}
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Button size="xl" variant="brand" className="sm:flex-1" onClick={props.onJoin} disabled={denied}>
-            {mode === "generate" ? "Start setup call" : "Join interview"}
+          <Button size="xl" variant="brand" className="sm:flex-1" onClick={props.onJoin} disabled={denied || props.charging}>
+            {props.charging && <Loader2 className="animate-spin" />}
+            {mode === "generate" ? "Start setup call" : props.balance < props.cost ? "Get credits and join" : "Join interview"}
           </Button>
           <Button size="xl" variant="outline" onClick={() => playTestSound(props.speakerId)}>
             <Volume2 /> Test speaker

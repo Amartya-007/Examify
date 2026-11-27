@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronsUpDown, Home, LogOut, Mic, Plus, Search, Settings, UserRound } from "lucide-react";
+import { ChevronsUpDown, CreditCard as CardIcon, Home, ShieldCheck, LogOut, Mic, Plus, Search, Settings, UserRound } from "lucide-react";
 import { signOut as firebaseSignOut } from "firebase/auth";
 
 import { auth } from "@/firebase/client";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import AvatarWave from "@/components/brand/AvatarWave";
+import { CreditCard, CreditChip } from "@/components/billing/CreditBalance";
 import CommandMenu, { useCommandMenu, type PaletteInterview } from "@/components/app/CommandMenu";
 import { Avatar, AvatarFallback, AvatarImage, initials } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -24,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type ShellUser = { id: string; name: string; email: string; profileURL?: string };
+type ShellUser = { id: string; name: string; email: string; profileURL?: string; role?: string };
 type Report = { id: string; interviewId: string; role: string; score: number; createdAt: string };
 
 const NAV = [
@@ -56,7 +57,7 @@ export default function AppShell({ user, reports, interviews, children }: { user
       </a>
 
       {/* Sidebar: icon rail on tablet, full on desktop */}
-      <aside className="no-print sticky top-0 hidden h-[100dvh] flex-col border-r bg-surface/60 md:flex">
+      <aside className="no-print scrollbar-none sticky top-0 hidden h-[100dvh] flex-col overflow-y-auto border-r bg-surface/60 md:flex">
         <div className="flex h-16 items-center px-5 lg:px-5">
           <Logo href="/dashboard" className="hidden lg:inline-flex" />
           <Link href="/dashboard" aria-label="Examify home" className="lg:hidden">
@@ -84,7 +85,7 @@ export default function AppShell({ user, reports, interviews, children }: { user
         </div>
 
         <nav aria-label="Main" className="mt-6 flex flex-col gap-0.5 px-3">
-          {NAV.map((n) => {
+          {[...NAV, { href: "/billing", label: "Billing", icon: CardIcon }, ...(user.role === "admin" ? [{ href: "/admin", label: "Admin", icon: ShieldCheck }] : [])].map((n) => {
             const active = isActive(n.href);
             return (
               <Tooltip key={n.href}>
@@ -132,6 +133,12 @@ export default function AppShell({ user, reports, interviews, children }: { user
 
         <div className="mt-auto flex flex-col gap-3 p-3">
           <div className="hidden lg:block">
+            <CreditCard />
+          </div>
+          <div className="grid place-items-center lg:hidden">
+            <CreditChip className="px-2" />
+          </div>
+          <div className="hidden lg:block">
             <ThemeToggle className="flex w-full" />
           </div>
           <DropdownMenu>
@@ -176,7 +183,8 @@ export default function AppShell({ user, reports, interviews, children }: { user
       {/* Mobile top bar */}
       <header className="no-print sticky top-0 z-40 flex h-14 items-center gap-2 border-b bg-background/85 px-4 backdrop-blur-md md:hidden">
         <Logo href="/dashboard" size="sm" />
-        <button onClick={() => palette.setOpen(true)} aria-label="Search" className="ml-auto grid size-9 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:bg-accent">
+        <CreditChip className="ml-auto" />
+        <button onClick={() => palette.setOpen(true)} aria-label="Search" className="grid size-9 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:bg-accent">
           <Search className="size-[18px]" />
         </button>
         <ThemeToggle compact />

@@ -54,6 +54,9 @@
   --chart-3: oklch(0.72 0.14 215);
   --chart-4: oklch(0.62 0.14 70);
   --chart-5: oklch(0.52 0.22 285);
+  /* Admin chart series (validated for colour-blind separation): A = sold/revenue, B = used. */
+  --series-a: #3a5be0;
+  --series-b: #c27c0e;
 }
 
 .dark {
@@ -92,6 +95,8 @@
   --border: oklch(0.8 0.08 265 / 0.12);
   --input: oklch(0.8 0.08 265 / 0.18);
   --ring: oklch(0.7 0.16 255 / 0.6);
+  --series-a: #5b7cfa;
+  --series-b: #cf8f2c;
 }
 
 @theme inline {
@@ -413,3 +418,11 @@
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
+
+/* Policy pages */
+.legal-prose { font-size: 1rem; line-height: 1.75; color: var(--foreground); }
+.legal-prose h2 { margin-top: 2.5rem; font-size: 1.35rem; font-weight: 620; letter-spacing: -0.02em; }
+.legal-prose p, .legal-prose ul { margin-top: 0.9rem; color: color-mix(in oklab, var(--foreground) 82%, transparent); }
+.legal-prose ul { list-style: disc; padding-left: 1.25rem; }
+.legal-prose li + li { margin-top: 0.35rem; }
+.legal-prose a { color: var(--brand-strong); text-decoration: underline; text-underline-offset: 2px; }
